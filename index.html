@@ -4,6 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>× アクア_ich Boost ×</title>
+
+<!-- Open Graph / Discord / Telegram / VK -->
+<meta property="og:title" content="× アクア_ich Boost ×">
+<meta property="og:description" content="Слушай Bass бусты от Аквича">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://olduserru.github.io/">
+<meta property="og:image" content="https://olduserru.github.io/preview.png">
+<meta property="og:site_name" content="Aquich bass">
+<meta property="og:locale" content="ru_RU">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="× アクア_ich Boost ×">
+<meta name="twitter:description" content="Bass Boost Player с эквалайзером">
+<meta name="twitter:image" content="https://olduserru.github.io/preview.png">
+
+<!-- Цвет темы Discord/Telegram -->
+<meta name="theme-color" content="#ff6b35">
+
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root {
@@ -17,6 +36,7 @@
     --green: #4caf50;
     --red: #f44336;
     --blue: #2196f3;
+    --purple: #9c27b0;
   }
   * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',system-ui,sans-serif; }
   body { background:var(--bg); color:var(--text); min-height:100vh; }
@@ -27,13 +47,14 @@
   .header p { color:var(--text2); font-size:13px; margin-top:4px; }
 
   /* Tabs */
-  .tabs { display:flex; gap:8px; margin-bottom:20px; background:var(--card); padding:6px; border-radius:16px; box-shadow:var(--shadow); }
-  .tab { flex:1; padding:14px 20px; border:none; background:transparent; border-radius:12px; cursor:pointer; font-size:15px; font-weight:600; color:var(--text2); transition:all 0.3s; position:relative; }
+  .tabs { display:flex; gap:6px; margin-bottom:20px; background:var(--card); padding:6px; border-radius:16px; box-shadow:var(--shadow); overflow-x:auto; }
+  .tab { flex:1; min-width:120px; padding:12px 16px; border:none; background:transparent; border-radius:12px; cursor:pointer; font-size:14px; font-weight:600; color:var(--text2); transition:all 0.3s; position:relative; white-space:nowrap; }
   .tab.active { background:var(--accent); color:white; box-shadow:0 2px 12px rgba(255,107,53,0.4); }
+  .tab.active-purple { background:var(--purple); color:white; box-shadow:0 2px 12px rgba(156,39,176,0.4); }
   .tab .badge-new {
     position:absolute;
     top:-6px;
-    right:10px;
+    right:8px;
     background:var(--green);
     color:white;
     font-size:9px;
@@ -43,6 +64,11 @@
     letter-spacing:0.5px;
     text-transform:uppercase;
   }
+
+  /* Sub-tabs for Custom */
+  .sub-tabs { display:flex; gap:6px; margin-bottom:16px; background:#f8f8f8; padding:4px; border-radius:12px; }
+  .sub-tab { flex:1; padding:10px 14px; border:none; background:transparent; border-radius:10px; cursor:pointer; font-size:13px; font-weight:600; color:var(--text2); transition:all 0.2s; white-space:nowrap; }
+  .sub-tab.active { background:var(--purple); color:white; }
 
   /* Auth */
   .auth-box { background:var(--card); border-radius:16px; padding:20px; margin-bottom:20px; box-shadow:var(--shadow); text-align:center; }
@@ -54,8 +80,9 @@
   .btn { padding:12px 28px; border:none; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
   .btn-primary { background:var(--accent); color:white; box-shadow:0 2px 12px rgba(255,107,53,0.3); }
   .btn-primary:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(255,107,53,0.4); }
+  .btn-purple { background:var(--purple); color:white; box-shadow:0 2px 12px rgba(156,39,176,0.3); }
+  .btn-purple:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(156,39,176,0.4); }
   .btn-green { background:var(--green); color:white; }
-  .btn-blue { background:var(--blue); color:white; }
   .btn-red { background:var(--red); color:white; }
 
   /* Equalizer */
@@ -132,6 +159,18 @@
   .icon-btn { width:40px; height:40px; border-radius:50%; border:none; background:var(--card); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:all 0.2s; }
   .icon-btn:hover { transform:scale(1.1); background:var(--accent); color:white; }
   .icon-btn.playing { background:var(--accent); color:white; }
+  .download-btn { 
+    padding:6px 14px; 
+    border:none; 
+    border-radius:8px; 
+    background:var(--green); 
+    color:white; 
+    font-size:12px; 
+    font-weight:600; 
+    cursor:pointer; 
+    transition:all 0.2s;
+  }
+  .download-btn:hover { background:#45a049; }
 
   /* Player bar */
   .player-bar { position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); padding:16px 20px; display:flex; align-items:center; gap:16px; box-shadow:0 -4px 20px rgba(0,0,0,0.08); z-index:100; }
@@ -152,21 +191,7 @@
 
   .spacer { height:100px; }
 
-  /* Google Sign In button */
   #g_id_signin { margin:10px auto; }
-
-  .download-btn { 
-    padding:6px 14px; 
-    border:none; 
-    border-radius:8px; 
-    background:var(--green); 
-    color:white; 
-    font-size:12px; 
-    font-weight:600; 
-    cursor:pointer; 
-    transition:all 0.2s;
-  }
-  .download-btn:hover { background:#45a049; }
 </style>
 </head>
 <body>
@@ -184,13 +209,20 @@
       Pro Bass Boost
       <span class="badge-new">NEW</span>
     </button>
+    <button class="tab" onclick="switchTab('custom')">Custom Bass Boosts</button>
   </div>
 
-  <!-- Auth / Drive -->
+  <!-- Sub-tabs for Custom -->
+  <div class="sub-tabs" id="subTabs" style="display:none;">
+    <button class="sub-tab active" onclick="switchSubTab('artem25k')">Bass by artem25k</button>
+  </div>
+
+  <!-- Auth -->
   <div class="auth-box">
     <h3>🔐 Авторизация Google Drive</h3>
     <div id="g_id_signin"></div>
     <button class="btn btn-primary" id="loadBtn" onclick="loadTracks()" style="display:none;">🔄 Обновить треки</button>
+    <button class="btn btn-purple" id="loadBtnCustom" onclick="loadTracks()" style="display:none;">🔄 Обновить треки</button>
     <button class="btn btn-red" id="logoutBtn" onclick="logout()" style="display:none;">🚪 Выйти</button>
     <div class="auth-status" id="authStatus">Войди через Google, чтобы загрузить треки</div>
   </div>
@@ -200,7 +232,7 @@
     <canvas id="vizCanvas" width="800" height="90"></canvas>
   </div>
 
-  <!-- Equalizer - 2 sliders -->
+  <!-- Equalizer -->
   <div class="eq-box">
     <div class="eq-title">🎚️ Эквалайзер</div>
     <div class="eq-sliders">
@@ -269,7 +301,8 @@
 const CLIENT_ID = '830248822179-fhpent7chj669b1dheijkqpao1aupvlo.apps.googleusercontent.com';
 const FOLDERS = {
   bass: '1kdlwdv2Vj61MguJNQw0tPqqS7c1af6V0',
-  pro: '1VSWe972Yy4k4_7MBRKq35y_H9FUlUdFY'
+  pro: '1VSWe972Yy4k4_7MBRKq35y_H9FUlUdFY',
+  artem25k: '16MuMkwjQwyCfIUcYSH_Y1FQLaSvmM2Ou'
 };
 const API_KEY = 'AIzaSyDWpLjol2-PGwgXaF_Ego91LoyUTzQK_4o';
 
@@ -277,6 +310,7 @@ const API_KEY = 'AIzaSyDWpLjol2-PGwgXaF_Ego91LoyUTzQK_4o';
 let audioCtx, source, gainNode, analyser, lowFilter, highFilter;
 let currentTrack = null, isPlaying = false, tracks = [], currentIndex = 0;
 let currentMode = 'bass';
+let currentSubTab = 'artem25k';
 let accessToken = null;
 
 function initAudio() {
@@ -324,16 +358,13 @@ function initGoogleAuth() {
 }
 
 function handleCredentialResponse(response) {
-  // For Google Identity Services, we need to use the token to get an access token
-  // We'll use the newer Google Identity Services approach
   accessToken = response.credential;
   showAuthStatus('✅ Авторизован! Нажми «Обновить треки»', 'ok');
   document.getElementById('g_id_signin').style.display = 'none';
-  document.getElementById('loadBtn').style.display = 'inline-flex';
+  updateLoadButton();
   document.getElementById('logoutBtn').style.display = 'inline-flex';
 }
 
-// Alternative: Use OAuth 2.0 flow for Drive API access
 function requestDriveAccess() {
   const client = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
@@ -342,12 +373,22 @@ function requestDriveAccess() {
       accessToken = tokenResponse.access_token;
       showAuthStatus('✅ Доступ к Google Drive получен!', 'ok');
       document.getElementById('g_id_signin').style.display = 'none';
-      document.getElementById('loadBtn').style.display = 'inline-flex';
+      updateLoadButton();
       document.getElementById('logoutBtn').style.display = 'inline-flex';
       loadTracks();
     }
   });
   client.requestAccessToken();
+}
+
+function updateLoadButton() {
+  if (currentMode === 'custom') {
+    document.getElementById('loadBtn').style.display = 'none';
+    document.getElementById('loadBtnCustom').style.display = 'inline-flex';
+  } else {
+    document.getElementById('loadBtn').style.display = 'inline-flex';
+    document.getElementById('loadBtnCustom').style.display = 'none';
+  }
 }
 
 function logout() {
@@ -356,6 +397,7 @@ function logout() {
   renderTracks();
   document.getElementById('g_id_signin').style.display = 'block';
   document.getElementById('loadBtn').style.display = 'none';
+  document.getElementById('loadBtnCustom').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'none';
   showAuthStatus('Войди через Google, чтобы загрузить треки', '');
 }
@@ -370,8 +412,30 @@ function showAuthStatus(msg, type) {
 function switchTab(mode) {
   currentMode = mode;
   document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', (mode === 'bass' && i === 0) || (mode === 'pro' && i === 1));
+    t.classList.remove('active', 'active-purple');
+    if ((mode === 'bass' && i === 0) || (mode === 'pro' && i === 1)) {
+      t.classList.add('active');
+    } else if (mode === 'custom' && i === 2) {
+      t.classList.add('active-purple');
+    }
   });
+
+  // Show/hide sub-tabs
+  const subTabs = document.getElementById('subTabs');
+  if (mode === 'custom') {
+    subTabs.style.display = 'flex';
+  } else {
+    subTabs.style.display = 'none';
+  }
+
+  updateLoadButton();
+  if (accessToken) loadTracks();
+}
+
+function switchSubTab(sub) {
+  currentSubTab = sub;
+  document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
   if (accessToken) loadTracks();
 }
 
@@ -390,19 +454,23 @@ function updateHighFreq(val) {
   document.getElementById('highFreqVal').style.color = v > 0 ? '#ff6b35' : (v < 0 ? '#888' : '#333');
 }
 
-// ===== LOAD TRACKS FROM GOOGLE DRIVE =====
+// ===== LOAD TRACKS =====
 async function loadTracks() {
   if (!accessToken) {
-    // Try to get access token first
     requestDriveAccess();
     return;
   }
 
-  const folderId = FOLDERS[currentMode];
+  let folderId;
+  if (currentMode === 'custom') {
+    folderId = FOLDERS[currentSubTab];
+  } else {
+    folderId = FOLDERS[currentMode];
+  }
+
   showAuthStatus('⏳ Загрузка треков...', 'loading');
 
   try {
-    // Try using Drive API with access token
     const response = await fetch(
       `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType+contains+'audio'&fields=files(id,name,mimeType,size)&pageSize=100`,
       {
@@ -413,7 +481,6 @@ async function loadTracks() {
     );
 
     if (!response.ok) {
-      // Fallback: Try with API Key for public files
       const pubResponse = await fetch(
         `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType+contains+'audio'&fields=files(id,name,mimeType,size)&key=${API_KEY}&pageSize=100`
       );
@@ -432,7 +499,6 @@ async function loadTracks() {
 
   } catch (e) {
     showAuthStatus('❌ ' + e.message, 'err');
-    // Show manual fallback
     showManualFallback();
   }
 }
@@ -473,7 +539,6 @@ function showManualFallback() {
         &nbsp;&nbsp;{ name: "Трек 2", url: "https://drive.google.com/uc?export=download&id=FILE_ID" }<br>
         ];
         </code>
-        Или открой папку в Google Drive → ПКМ на файл → "Получить ссылку" → скопируй ID.
       </p>
     </div>
   `;
@@ -512,7 +577,6 @@ async function downloadTrack(index) {
   if (!track) return;
 
   try {
-    // Try File System Access API for "music" folder
     const dirHandle = await window.showDirectoryPicker();
     const fileHandle = await dirHandle.getFileHandle(track.name, { create: true });
     const writable = await fileHandle.createWritable();
@@ -522,7 +586,6 @@ async function downloadTrack(index) {
 
     showAuthStatus('✅ Сохранено!', 'ok');
   } catch (e) {
-    // Fallback: regular download
     const a = document.createElement('a');
     a.href = track._url;
     a.download = track.name;
@@ -650,5 +713,6 @@ window.onload = function() {
   drawVisualizer();
 };
 </script>
+
 </body>
 </html>
