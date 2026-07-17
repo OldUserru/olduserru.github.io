@@ -22,4 +22,90 @@
         }
         
         .container {
-            background: rgba(255, 255,
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            object-fit: cover;
+            display: block;
+            background: #ddd;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .bio {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .link {
+            display: block;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: #f0f0f0;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .windows-link {
+            display: block;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .windows-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 120, 212, 0.5);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="preview.jpg" alt="Avatar" class="avatar" onerror="this.style.display='none'">
+        <h1>Ваше Имя</h1>
+        <p class="bio">Краткое описание о себе</p>
+        
+        <a href="bassplayer.html" class="link">Bass Player</a>
+        <a href="windowsdownloader.html" class="windows-link">Windows 11 ISO</a>
+        
+        <div class="footer">Made with ❤️</div>
+    </div>
+</body>
+</html>
