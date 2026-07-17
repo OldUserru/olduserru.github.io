@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои ссылки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #ddd;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .bio {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .link {
+            display: block;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: #f0f0f0;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Стиль для кнопки Bass Player */
+        .bass-link {
+            display: block;
+            padding: 15px 20px;
+            margin: 15px 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 12px;
+            text-decoration: none;
+            color: #e94560;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: 2px solid #e94560;
+        }
+        
+        .bass-link:hover {
+            background: #e94560;
+            color: #1a1a2e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.5);
+        }
+        
+        .bass-link::before {
+            content: "🎸 ";
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="avatar">👤</div>
+        <h1>Ваше Имя</h1>
+        <p class="bio">Краткое описание о себе</p>
+        
+        <!-- Ссылка на Bass Player -->
+        <a href="bassplayer.html" class="bass-link">Bass Player</a>
+        
+        <a href="https://t.me/username" class="link" target="_blank">Telegram</a>
+        <a href="https://instagram.com/username" class="link" target="_blank">Instagram</a>
+        <a href="https://github.com/username" class="link" target="_blank">GitHub</a>
+        <a href="https://youtube.com/@username" class="link" target="_blank">YouTube</a>
+        
+        <div class="footer">Made with ❤️</div>
+    </div>
+</body>
+</html>
