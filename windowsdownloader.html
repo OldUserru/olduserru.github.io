@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows 11 ISO Downloader</title>
+    <title>Windows 11 ISO Downloader — DNS Speed Simulator</title>
     <style>
         * {
             margin: 0;
@@ -75,7 +75,7 @@
         /* DNS Section */
         .dns-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -131,18 +131,72 @@
             margin-top: 8px;
         }
 
-        /* Instructions */
-        .instructions {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
+        .provider-tag {
+            display: inline-block;
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 0.75rem;
+            color: #00d4ff;
+            margin-top: 8px;
         }
 
-        .instructions.show {
+        /* Speedtest Section */
+        .speedtest-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .speedtest-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 32px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(255,107,53,0.3);
+            margin-bottom: 20px;
+        }
+
+        .speedtest-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(255,107,53,0.4);
+        }
+
+        .speedtest-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .speedtest-btn.running {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(255,107,53,0.3); }
+            50% { box-shadow: 0 4px 40px rgba(255,107,53,0.6); }
+        }
+
+        .speed-display {
+            display: none;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .speed-display.show {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.5s ease;
         }
 
         @keyframes fadeIn {
@@ -150,43 +204,121 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .instructions h3 {
-            margin-bottom: 15px;
+        .speed-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .speed-row:last-child {
+            border-bottom: none;
+        }
+
+        .speed-label {
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        .speed-value {
+            font-family: 'Consolas', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .speed-value.download { color: #00d4ff; }
+        .speed-value.upload { color: #00ff64; }
+        .speed-value.ping { color: #ff6b35; }
+
+        .speed-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .speed-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 2s ease-out;
+            width: 0%;
+        }
+
+        .speed-bar.download { background: linear-gradient(90deg, #00d4ff, #0099cc); }
+        .speed-bar.upload { background: linear-gradient(90deg, #00ff64, #00cc44); }
+
+        .speed-result {
+            display: none;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(123,44,191,0.1));
+            border: 1px solid rgba(0,212,255,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .speed-result.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .speed-result h3 {
             color: #00d4ff;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
         }
 
-        .instructions ol {
-            padding-left: 20px;
-            line-height: 2;
-            color: #ccc;
+        .speed-result p {
+            color: #aaa;
+            font-size: 0.9rem;
         }
 
-        .instructions li {
-            margin-bottom: 5px;
+        .speed-result .dns-name-highlight {
+            color: #fff;
+            font-weight: 700;
         }
 
-        .ip-box {
-            display: inline-flex;
+        .speed-result .speed-boost {
+            color: #00ff64;
+            font-weight: 700;
+        }
+
+        .speed-result .speed-drop {
+            color: #ff4444;
+            font-weight: 700;
+        }
+
+        /* Progress animation */
+        .progress-ring {
+            display: none;
+            justify-content: center;
             align-items: center;
             gap: 8px;
-            background: rgba(0,212,255,0.1);
-            border: 1px solid rgba(0,212,255,0.3);
-            border-radius: 6px;
-            padding: 4px 12px;
-            font-family: monospace;
-            color: #00d4ff;
-            cursor: pointer;
-            transition: background 0.2s;
+            margin: 20px 0;
         }
 
-        .ip-box:hover {
-            background: rgba(0,212,255,0.2);
+        .progress-ring.show {
+            display: flex;
         }
 
-        .ip-box.copied {
-            background: rgba(0,255,100,0.15);
-            border-color: rgba(0,255,100,0.4);
-            color: #00ff64;
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff6b35;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .progress-dot:nth-child(1) { animation-delay: -0.32s; }
+        .progress-dot:nth-child(2) { animation-delay: -0.16s; }
+        .progress-dot:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
         }
 
         /* Downloads */
@@ -298,6 +430,30 @@
             opacity: 1;
         }
 
+        .best-dns-badge {
+            display: none;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #000;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dns-option.best {
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+        }
+
+        .dns-option.best .best-dns-badge {
+            display: block;
+        }
+
         @media (max-width: 600px) {
             .header h1 { font-size: 1.8rem; }
             .dns-grid { grid-template-columns: 1fr; }
@@ -310,7 +466,7 @@
     <div class="container">
         <div class="header">
             <h1>🪟 Windows 11 ISO Downloader</h1>
-            <p>Выберите DNS и скачайте нужную версию Windows 11</p>
+            <p>Выберите DNS, протестируйте скорость и скачайте образ</p>
         </div>
 
         <!-- DNS Selection -->
@@ -321,63 +477,108 @@
             </div>
 
             <div class="dns-grid">
-                <div class="dns-option" data-dns="comss" data-primary="92.38.152.163" data-secondary="93.115.24.204">
+                <div class="dns-option" data-dns="comss" data-primary="92.38.152.163" data-secondary="93.115.24.204" data-modifier="+20" data-providers="Ростелеком, МТС, Билайн, Дом.ру, ТТК">
+                    <span class="best-dns-badge">🏆 Лучший</span>
                     <div class="dns-name">Comss.one</div>
                     <div class="dns-ips">
                         <span class="ip-box" onclick="copyIP(event, '92.38.152.163')">92.38.152.163</span>
                         <span class="ip-box" onclick="copyIP(event, '93.115.24.204')">93.115.24.204</span>
                     </div>
                     <div class="dns-desc">Популярный DNS для обхода блокировок в РФ</div>
+                    <span class="provider-tag">📡 Ростелеком, МТС, Билайн, Дом.ру, ТТК</span>
                 </div>
 
-                <div class="dns-option" data-dns="cloudflare" data-primary="1.1.1.1" data-secondary="1.0.0.1">
+                <div class="dns-option" data-dns="cloudflare" data-primary="1.1.1.1" data-secondary="1.0.0.1" data-modifier="+20" data-providers="МТС, Теле2, МегаФон, Yota">
                     <div class="dns-name">Cloudflare</div>
                     <div class="dns-ips">
                         <span class="ip-box" onclick="copyIP(event, '1.1.1.1')">1.1.1.1</span>
                         <span class="ip-box" onclick="copyIP(event, '1.0.0.1')">1.0.0.1</span>
                     </div>
                     <div class="dns-desc">Быстрый и приватный DNS от Cloudflare</div>
+                    <span class="provider-tag">📡 МТС, Теле2, МегаФон, Yota</span>
                 </div>
 
-                <div class="dns-option" data-dns="google" data-primary="8.8.8.8" data-secondary="8.8.4.4">
+                <div class="dns-option" data-dns="google" data-primary="8.8.8.8" data-secondary="8.8.4.4" data-modifier="-10" data-providers="Ростелеком, Дом.ру, ТТК, Эр-Телеком">
                     <div class="dns-name">Google DNS</div>
                     <div class="dns-ips">
                         <span class="ip-box" onclick="copyIP(event, '8.8.8.8')">8.8.8.8</span>
                         <span class="ip-box" onclick="copyIP(event, '8.8.4.4')">8.8.4.4</span>
                     </div>
                     <div class="dns-desc">Надёжный публичный DNS от Google</div>
+                    <span class="provider-tag">📡 Ростелеком, Дом.ру, ТТК, Эр-Телеком</span>
                 </div>
 
-                <div class="dns-option" data-dns="quad9" data-primary="9.9.9.9" data-secondary="149.112.112.112">
+                <div class="dns-option" data-dns="quad9" data-primary="9.9.9.9" data-secondary="149.112.112.112" data-modifier="-10" data-providers="МТС, МегаФон, Yota, Таттелеком">
                     <div class="dns-name">Quad9</div>
                     <div class="dns-ips">
                         <span class="ip-box" onclick="copyIP(event, '9.9.9.9')">9.9.9.9</span>
                         <span class="ip-box" onclick="copyIP(event, '149.112.112.112')">149.112.112.112</span>
                     </div>
                     <div class="dns-desc">Защита от вредоносных доменов</div>
+                    <span class="provider-tag">📡 МТС, МегаФон, Yota, Таттелеком</span>
                 </div>
 
-                <div class="dns-option" data-dns="adguard" data-primary="94.140.14.14" data-secondary="94.140.15.15">
+                <div class="dns-option" data-dns="adguard" data-primary="94.140.14.14" data-secondary="94.140.15.15" data-modifier="+20" data-providers="Билайн, Теле2, Ростелеком, Дом.ру">
                     <div class="dns-name">AdGuard DNS</div>
                     <div class="dns-ips">
                         <span class="ip-box" onclick="copyIP(event, '94.140.14.14')">94.140.14.14</span>
                         <span class="ip-box" onclick="copyIP(event, '94.140.15.15')">94.140.15.15</span>
                     </div>
                     <div class="dns-desc">Блокировка рекламы и трекеров</div>
+                    <span class="provider-tag">📡 Билайн, Теле2, Ростелеком, Дом.ру</span>
                 </div>
             </div>
 
-            <div class="instructions" id="instructions">
-                <h3>📋 Инструкция по настройке DNS в Windows</h3>
-                <ol>
-                    <li>Нажмите <strong>Win + R</strong>, введите <code>ncpa.cpl</code> и нажмите Enter</li>
-                    <li>Найдите ваше активное подключение, кликните правой кнопкой → <strong>Свойства</strong></li>
-                    <li>Выберите <strong>IP версии 4 (TCP/IPv4)</strong> → <strong>Свойства</strong></li>
-                    <li>Включите <strong>Использовать следующие адреса DNS-серверов</strong></li>
-                    <li>Введите: <strong id="primary-ip">---</strong> (предпочитаемый) и <strong id="secondary-ip">---</strong> (альтернативный)</li>
-                    <li>Нажмите <strong>OK</strong> → перезагрузите браузер</li>
-                </ol>
+            <!-- Speedtest Section -->
+            <div class="speedtest-section">
+                <button class="speedtest-btn" id="speedtestBtn" onclick="runSpeedtest()">
+                    <span>⚡</span> Запустить Speedtest
+                </button>
+
+                <div class="progress-ring" id="progressRing">
+                    <div class="progress-dot"></div>
+                    <div class="progress-dot"></div>
+                    <div class="progress-dot"></div>
+                    <span style="color:#888; margin-left:10px;">Тестируем скорость...</span>
+                </div>
+
+                <div class="speed-display" id="speedDisplay">
+                    <div class="speed-row">
+                        <span class="speed-label">📥 Скачивание</span>
+                        <span class="speed-value download" id="downloadSpeed">0 Мбит/с</span>
+                    </div>
+                    <div class="speed-bar-container">
+                        <div class="speed-bar download" id="downloadBar"></div>
+                    </div>
+
+                    <div class="speed-row" style="margin-top:15px;">
+                        <span class="speed-label">📤 Отправка</span>
+                        <span class="speed-value upload" id="uploadSpeed">0 Мбит/с</span>
+                    </div>
+                    <div class="speed-bar-container">
+                        <div class="speed-bar upload" id="uploadBar"></div>
+                    </div>
+
+                    <div class="speed-row" style="margin-top:15px;">
+                        <span class="speed-label">📶 Пинг</span>
+                        <span class="speed-value ping" id="pingValue">0 мс</span>
+                    </div>
+                </div>
+
+                <div class="speed-result" id="speedResult">
+                    <h3>🎯 Результат теста</h3>
+                    <p id="resultText"></p>
+                </div>
             </div>
+        </div>
+
+        <!-- Best DNS Recommendation -->
+        <div class="card" id="bestDnsCard" style="display:none;">
+            <div class="card-title">
+                <span class="icon">🏆</span>
+                <span>Рекомендуемый DNS для вас</span>
+            </div>
+            <div id="bestDnsContent" style="color:#ccc; line-height:1.8;"></div>
         </div>
 
         <!-- Downloads -->
@@ -431,31 +632,38 @@
 
         <div class="footer">
             <p>Ссылки взяты с <a href="https://softnet.su" target="_blank">softnet.su</a> (Comss)</p>
-            <p style="margin-top:8px;">Используйте на свой страх и риск. Убедитесь в легальности скачиваемых файлов.</p>
+            <p style="margin-top:8px;">Speedtest — симуляция для демонстрации разницы между DNS</p>
         </div>
     </div>
 
     <div class="toast" id="toast">Скопировано!</div>
 
     <script>
+        let selectedDNS = null;
+        let baseDownload = 85;
+        let baseUpload = 42;
+        let basePing = 24;
+
         // DNS Selection
         document.querySelectorAll('.dns-option').forEach(option => {
             option.addEventListener('click', function(e) {
-                // Don't trigger if clicking IP boxes
                 if (e.target.closest('.ip-box')) return;
 
-                // Remove active from all
                 document.querySelectorAll('.dns-option').forEach(o => o.classList.remove('active'));
-
-                // Add active to clicked
                 this.classList.add('active');
 
-                // Show instructions
-                const primary = this.dataset.primary;
-                const secondary = this.dataset.secondary;
-                document.getElementById('primary-ip').textContent = primary;
-                document.getElementById('secondary-ip').textContent = secondary;
-                document.getElementById('instructions').classList.add('show');
+                selectedDNS = {
+                    name: this.querySelector('.dns-name').textContent,
+                    primary: this.dataset.primary,
+                    secondary: this.dataset.secondary,
+                    modifier: parseInt(this.dataset.modifier),
+                    providers: this.dataset.providers
+                };
+
+                // Reset speedtest
+                document.getElementById('speedDisplay').classList.remove('show');
+                document.getElementById('speedResult').classList.remove('show');
+                document.getElementById('bestDnsCard').style.display = 'none';
             });
         });
 
@@ -471,6 +679,145 @@
                     box.classList.remove('copied');
                     box.textContent = ip;
                 }, 1500);
+            });
+        }
+
+        // Speedtest
+        function runSpeedtest() {
+            if (!selectedDNS) {
+                showToast('Сначала выберите DNS!');
+                return;
+            }
+
+            const btn = document.getElementById('speedtestBtn');
+            const ring = document.getElementById('progressRing');
+            const display = document.getElementById('speedDisplay');
+            const result = document.getElementById('speedResult');
+
+            btn.disabled = true;
+            btn.classList.add('running');
+            btn.innerHTML = '<span>⏳</span> Тестируем...';
+            ring.classList.add('show');
+            display.classList.remove('show');
+            result.classList.remove('show');
+
+            // Simulate test with random variation
+            const variation = (Math.random() * 10 - 5); // -5 to +5
+            const modifier = selectedDNS.modifier;
+
+            let download = baseDownload + variation + (modifier > 0 ? modifier * 0.8 : modifier * 0.5);
+            let upload = baseUpload + variation * 0.5 + (modifier > 0 ? modifier * 0.4 : modifier * 0.3);
+            let ping = basePing + variation * 0.3 + (modifier > 0 ? -modifier * 0.15 : Math.abs(modifier) * 0.2);
+
+            download = Math.max(10, Math.round(download * 10) / 10);
+            upload = Math.max(5, Math.round(upload * 10) / 10);
+            ping = Math.max(5, Math.round(ping));
+
+            setTimeout(() => {
+                ring.classList.remove('show');
+                display.classList.add('show');
+
+                // Animate values
+                animateValue('downloadSpeed', 0, download, 1500, ' Мбит/с');
+                animateValue('uploadSpeed', 0, upload, 1500, ' Мбит/с');
+                animateValue('pingValue', 0, ping, 1000, ' мс');
+
+                // Animate bars
+                document.getElementById('downloadBar').style.width = Math.min(100, (download / 150) * 100) + '%';
+                document.getElementById('uploadBar').style.width = Math.min(100, (upload / 80) * 100) + '%';
+
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.classList.remove('running');
+                    btn.innerHTML = '<span>⚡</span> Запустить Speedtest';
+
+                    // Show result
+                    const boostText = modifier > 0 
+                        ? `<span class="speed-boost">+${modifier}%</span> к скорости` 
+                        : `<span class="speed-drop">${modifier}%</span> к скорости`;
+
+                    document.getElementById('resultText').innerHTML = 
+                        `С DNS <span class="dns-name-highlight">${selectedDNS.name}</span> ` +
+                        `ваша скорость изменилась на ${boostText}. ` +
+                        `Рекомендуется для провайдеров: <strong>${selectedDNS.providers}</strong>.`;
+                    result.classList.add('show');
+
+                    // Show best DNS recommendation
+                    showBestDNSRecommendation(download, upload, ping);
+
+                }, 1600);
+            }, 2500);
+        }
+
+        function animateValue(id, start, end, duration, suffix) {
+            const obj = document.getElementById(id);
+            const range = end - start;
+            const minTimer = 50;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            stepTime = Math.max(stepTime, minTimer);
+            let startTime = new Date().getTime();
+            let endTime = startTime + duration;
+            let timer;
+
+            function run() {
+                let now = new Date().getTime();
+                let remaining = Math.max((endTime - now) / duration, 0);
+                let value = Math.round((end - (remaining * range)) * 10) / 10;
+                obj.innerHTML = value + suffix;
+                if (value == end) {
+                    clearInterval(timer);
+                }
+            }
+
+            timer = setInterval(run, stepTime);
+            run();
+        }
+
+        function showBestDNSRecommendation(download, upload, ping) {
+            const card = document.getElementById('bestDnsCard');
+            const content = document.getElementById('bestDnsContent');
+
+            // Determine best DNS based on simulated results
+            const dnsScores = [
+                { name: 'Comss.one', score: 95, providers: 'Ростелеком, МТС, Билайн, Дом.ру, ТТК', ips: '92.38.152.163, 93.115.24.204' },
+                { name: 'Cloudflare', score: 92, providers: 'МТС, Теле2, МегаФон, Yota', ips: '1.1.1.1, 1.0.0.1' },
+                { name: 'AdGuard DNS', score: 88, providers: 'Билайн, Теле2, Ростелеком, Дом.ру', ips: '94.140.14.14, 94.140.15.15' },
+                { name: 'Google DNS', score: 78, providers: 'Ростелеком, Дом.ру, ТТК, Эр-Телеком', ips: '8.8.8.8, 8.8.4.4' },
+                { name: 'Quad9', score: 72, providers: 'МТС, МегаФон, Yota, Таттелеком', ips: '9.9.9.9, 149.112.112.112' }
+            ];
+
+            // Adjust score based on current selection modifier
+            const currentModifier = selectedDNS ? selectedDNS.modifier : 0;
+            dnsScores.forEach(d => {
+                if (selectedDNS && d.name === selectedDNS.name) {
+                    d.score = Math.min(100, d.score + currentModifier);
+                }
+            });
+
+            dnsScores.sort((a, b) => b.score - a.score);
+            const best = dnsScores[0];
+
+            content.innerHTML = `
+                <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
+                    <span style="font-size:3rem;">🏆</span>
+                    <div>
+                        <div style="font-size:1.4rem; font-weight:700; color:#ffd700;">${best.name}</div>
+                        <div style="color:#888; font-size:0.9rem;">Рейтинг: ${best.score}/100</div>
+                    </div>
+                </div>
+                <p><strong>IP-адреса:</strong> <span style="color:#00d4ff; font-family:monospace;">${best.ips}</span></p>
+                <p><strong>Рекомендуемые провайдеры:</strong> ${best.providers}</p>
+                <p style="margin-top:10px; color:#aaa;">На основе симуляции с вашими текущими параметрами сети (${download}↓ / ${upload}↑ Мбит/с, ${ping} мс).</p>
+            `;
+
+            card.style.display = 'block';
+
+            // Highlight best DNS card
+            document.querySelectorAll('.dns-option').forEach(o => o.classList.remove('best'));
+            document.querySelectorAll('.dns-option').forEach(o => {
+                if (o.dataset.dns === best.name.toLowerCase().replace('.one', '').replace(' dns', '').replace(' ', '')) {
+                    o.classList.add('best');
+                }
             });
         }
 
