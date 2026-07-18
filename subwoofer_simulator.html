@@ -3,425 +3,662 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sub Simulator - Pride M3.5 | Bass OS</title>
+    <title>BASS OS — Subwoofer Simulator</title>
     <style>
-        /* ============================================
-           RESET & BASE
-           ============================================ */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --neon-green: #00ff88;
+            --neon-red: #ff0044;
+            --neon-orange: #ff8800;
+            --neon-blue: #0088ff;
+            --dark-bg: #0d0d12;
+            --panel-bg: #16161e;
+            --panel-border: #2a2a3a;
+        }
+
         body {
-            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
-            background: #0a0a0a;
+            background: var(--dark-bg);
             color: #fff;
+            font-family: 'Rajdhani', sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
-            user-select: none;
         }
 
-        /* ============================================
-           ROOM ENVIRONMENT
-           ============================================ */
-        .room {
-            min-height: 100vh;
-            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 50%, #0a0a0a 100%);
-            position: relative;
-            padding: 20px;
-        }
-
-        .room::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(ellipse at 20% 50%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 50%, rgba(233, 69, 96, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ============================================
-           TV SECTION (SAMSUNG)
-           ============================================ */
-        .tv-section {
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-            margin: 0 auto 30px;
+        /* ==================== HEADER ==================== */
+        .os-header {
             text-align: center;
-        }
-
-        .tv-brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            padding: 8px 20px;
-            background: #000;
-            border-radius: 8px;
-            border: 1px solid #333;
-        }
-
-        .tv-brand img {
-            height: 24px;
-            width: auto;
-            filter: brightness(0) invert(1);
-        }
-
-        .tv-brand span {
-            font-size: 12px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .tv-frame {
-            background: #111;
-            border-radius: 12px;
             padding: 15px;
-            box-shadow: 
-                0 0 40px rgba(0, 0, 0, 0.8),
-                inset 0 0 20px rgba(0, 0, 0, 0.5);
-            border: 2px solid #222;
-            position: relative;
+            background: linear-gradient(180deg, #1a1a2e 0%, var(--dark-bg) 100%);
+            border-bottom: 2px solid var(--neon-green);
         }
-
-        .tv-screen {
-            background: #000;
-            border-radius: 4px;
-            aspect-ratio: 16/9;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #333;
-        }
-
-        .tv-screen::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                180deg,
-                rgba(255,255,255,0.03) 0%,
-                transparent 10%,
-                transparent 90%,
-                rgba(255,255,255,0.03) 100%
-            );
-            pointer-events: none;
-        }
-
-        /* Bass OS Interface on TV */
-        .bass-os-tv {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #0a1628 0%, #1a0a28 50%, #0a0a1a 100%);
-        }
-
-        .bass-os-tv .logo-big {
-            font-size: 48px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00ff88, #00ccff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
-            margin-bottom: 10px;
-            letter-spacing: 4px;
-        }
-
-        .bass-os-tv .subtitle {
+        .os-title {
+            font-family: 'Orbitron', sans-serif;
             font-size: 14px;
-            color: #00ff88;
-            opacity: 0.7;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-        }
-
-        .bass-os-tv .visualizer-tv {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            height: 60px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            gap: 3px;
-        }
-
-        .bar-tv {
-            width: 6px;
-            background: linear-gradient(180deg, #00ff88, #00ccff);
-            border-radius: 2px 2px 0 0;
-            transition: height 0.05s ease;
-            opacity: 0.8;
-        }
-
-        /* ============================================
-           HEAD UNIT / MAGNITOLA (Bass OS)
-           ============================================ */
-        .head-unit-section {
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-
-        .head-unit {
-            background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.8),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            border: 1px solid #2a2a3e;
-            position: relative;
-        }
-
-        .head-unit::before {
-            content: 'BASS OS';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #00ff88, #00ccff);
-            color: #000;
+            font-weight: 900;
+            color: var(--dark-bg);
+            background: var(--neon-green);
+            display: inline-block;
             padding: 4px 20px;
             border-radius: 20px;
-            font-size: 11px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+            letter-spacing: 4px;
+            text-transform: uppercase;
         }
 
-        /* Screen */
-        .hu-screen {
-            background: #000;
+        /* ==================== MAIN LAYOUT ==================== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 500px 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ==================== PANELS ==================== */
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 20px;
-            border: 2px solid #1a1a2e;
-            box-shadow: inset 0 0 20px rgba(0, 255, 136, 0.05);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
-
-        .hu-screen::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #00ff88, transparent);
-            opacity: 0.3;
-        }
-
-        /* Display content */
-        .display-main {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .track-info {
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
-        .track-name {
-            font-size: 18px;
-            color: #00ff88;
-            font-weight: 600;
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        /* ==================== TV / DISPLAY ==================== */
+        .tv-section {
+            margin-bottom: 20px;
         }
-
-        .track-artist {
-            font-size: 12px;
-            color: #666;
-        }
-
-        /* Power meter */
-        .power-section {
-            background: rgba(0, 0, 0, 0.5);
+        .tv-frame {
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto;
+            background: #0a0a0f;
+            border: 3px solid #333;
             border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #1a1a2e;
+            padding: 8px;
+            position: relative;
         }
-
-        .power-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .power-label span:first-child {
-            font-size: 11px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .power-value {
-            font-size: 24px;
-            font-weight: 900;
-            color: #00ff88;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-
-        .power-value.warning {
-            color: #ffaa00;
-            text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
-        }
-
-        .power-value.danger {
-            color: #ff4444;
-            text-shadow: 0 0 15px rgba(255, 68, 68, 0.6);
-            animation: pulse-danger 0.5s ease infinite alternate;
-        }
-
-        @keyframes pulse-danger {
-            from { opacity: 1; }
-            to { opacity: 0.6; }
-        }
-
-        /* Power bar */
-        .power-bar-container {
-            height: 8px;
-            background: #111;
+        .tv-screen {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
             border-radius: 4px;
+            position: relative;
             overflow: hidden;
-            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .power-bar-fill {
+        .tv-screen video {
+            width: 100%;
             height: 100%;
-            border-radius: 4px;
-            transition: width 0.1s ease, background 0.3s ease;
+            object-fit: cover;
+            display: none;
+        }
+        .tv-screen video.active {
+            display: block;
+        }
+        .vinyl-disc {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at 35% 35%, #2a2a2a 0%, #0a0a0a 40%, #000 70%);
+            border: 3px solid #333;
             position: relative;
+            animation: spin 2s linear infinite;
+            display: none;
+        }
+        .vinyl-disc.active {
+            display: block;
+        }
+        .vinyl-disc::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 28px;
+            height: 28px;
+            background: var(--neon-red);
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        .vinyl-disc::after {
+            content: 'AUDIO';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 7px;
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .tv-text {
+            position: absolute;
+            bottom: 15px;
+            font-size: 11px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .power-bar-fill::after {
+        /* ==================== SUBWOOFER — CSS DRAWN ==================== */
+        .sub-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .sub-enclosure {
+            width: 420px;
+            background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 50%, #1a1a1a 100%);
+            border: 2px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 25px 20px 20px;
+            position: relative;
+            box-shadow: 
+                0 10px 40px rgba(0,0,0,0.8),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .sub-enclosure::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: shimmer 2s infinite;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+            opacity: 0.5;
+        }
+        .sub-brand {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            color: var(--neon-red);
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .sub-brand::before,
+        .sub-brand::after {
+            content: '◆';
+            margin: 0 8px;
+            color: #333;
+        }
+        .sub-woofers {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
         }
 
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        /* Single Woofer Unit */
+        .woofer-unit {
+            position: relative;
+            width: 160px;
+            height: 160px;
         }
-
-        .power-bar-fill.safe { background: linear-gradient(90deg, #00ff88, #00ccff); }
-        .power-bar-fill.warning { background: linear-gradient(90deg, #ffaa00, #ff8800); }
-        .power-bar-fill.danger { background: linear-gradient(90deg, #ff4444, #ff0000); }
-
-        /* Max power marker */
-        .max-power-marker {
+        .woofer-frame {
             position: absolute;
-            top: -2px;
-            bottom: -2px;
-            width: 2px;
-            background: #ff4444;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #222 0%, #111 50%, #222 100%);
+            border: 4px solid #333;
+            box-shadow: 
+                0 4px 15px rgba(0,0,0,0.5),
+                inset 0 2px 5px rgba(255,255,255,0.05);
+        }
+        .woofer-frame::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            border: 1px dashed #444;
+        }
+        .woofer-cone {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 50%, #151515 100%);
+            border: 2px solid #2a2a2a;
+            transition: transform 0.05s ease-out;
+            overflow: hidden;
+        }
+        .woofer-cone::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #2a2a2a 0%, #151515 100%);
+            border: 2px solid #3a3a3a;
+        }
+        .woofer-dustcap {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 40%, #ff3333 0%, #aa0000 60%, #550000 100%);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+            z-index: 2;
+            transition: box-shadow 0.1s;
+        }
+        .woofer-surround {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border-radius: 50%;
+            border: 6px solid #1a1a1a;
+            box-shadow: 
+                inset 0 0 10px rgba(0,0,0,0.5),
+                0 0 0 1px #333;
+            pointer-events: none;
+        }
+        .woofer-grill {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .grill-bar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(100,100,100,0.4), transparent);
+        }
+        .grill-bar:nth-child(1) { top: 25%; }
+        .grill-bar:nth-child(2) { top: 40%; }
+        .grill-bar:nth-child(3) { top: 55%; }
+        .grill-bar:nth-child(4) { top: 70%; }
+
+        .led-ring {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            box-shadow: 0 0 25px var(--led-color, rgba(0,255,136,0.2));
+            transition: box-shadow 0.1s;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .sub-port {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 80px;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+            border: 2px solid #333;
+            border-radius: 17px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+        }
+        .sub-port::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 60px;
+            background: #000;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,1);
+        }
+
+        /* ==================== MID & TWEETER ==================== */
+        .satellites {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        .sat-label {
+            text-align: center;
+            font-size: 10px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .mid-unit {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+        .mid-frame {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #1e1e1e 0%, #111 50%, #1e1e1e 100%);
+            border: 3px solid #2a2a2a;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+        }
+        .mid-cone {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #181818 0%, #0a0a0a 50%, #151515 100%);
+            border: 2px solid #252525;
+            transition: transform 0.05s ease-out;
+        }
+        .mid-cone::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 1px solid #3a3a3a;
+        }
+        .mid-dustcap {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 40%, #ffaa00 0%, #aa6600 60%);
             z-index: 2;
         }
-
-        .max-power-label {
+        .tweet-unit {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+        .tweet-frame {
             position: absolute;
-            top: -18px;
-            transform: translateX(-50%);
-            font-size: 9px;
-            color: #ff4444;
-            white-space: nowrap;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #222 0%, #151515 100%);
+            border: 2px solid #333;
         }
-
-        /* Status indicator */
-        .status-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
+        .tweet-dome {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 40%, #444 0%, #222 60%, #111 100%);
+            border: 1px solid #3a3a3a;
+            transition: transform 0.05s ease-out;
         }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .status-dot {
+        .tweet-dome::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #00ff88;
-            box-shadow: 0 0 8px currentColor;
-            transition: all 0.3s ease;
+            background: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0,136,255,0.5);
         }
 
-        .status-dot.warning { background: #ffaa00; box-shadow: 0 0 8px #ffaa00; animation: blink 1s infinite; }
-        .status-dot.danger { background: #ff4444; box-shadow: 0 0 12px #ff4444; animation: blink 0.3s infinite; }
-        .status-dot.smoke { background: #888; box-shadow: 0 0 8px #888; }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        /* ==================== AMPLIFIER ==================== */
+        .amp-section {
+            margin-bottom: 20px;
+        }
+        .amp-body {
+            background: linear-gradient(180deg, #1a1a1e 0%, #111 100%);
+            border: 2px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .amp-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+        }
+        .amp-name {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            color: #555;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+        }
+        .amp-display-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .vu-section {
+            display: flex;
+            gap: 8px;
+        }
+        .vu-channel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .vu-label {
+            font-size: 9px;
+            color: #444;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .vu-scale {
+            width: 18px;
+            height: 80px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        .vu-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, 
+                var(--neon-green) 0%, 
+                var(--neon-green) 50%, 
+                var(--neon-orange) 75%, 
+                var(--neon-red) 100%);
+            transition: height 0.05s ease-out;
+            border-radius: 0 0 2px 2px;
+        }
+        .amp-lights {
+            display: flex;
+            gap: 15px;
+        }
+        .amp-light {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .light-bulb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            transition: all 0.1s;
+        }
+        .light-bulb.power {
+            background: var(--neon-green);
+            box-shadow: 0 0 8px rgba(0,255,136,0.4);
+        }
+        .light-bulb.protect.on {
+            background: var(--neon-orange);
+            box-shadow: 0 0 8px rgba(255,136,0,0.4);
+        }
+        .light-bulb.clip.on {
+            background: var(--neon-red);
+            box-shadow: 0 0 12px rgba(255,0,68,0.8);
+            animation: clip-blink 0.15s infinite alternate;
+        }
+        @keyframes clip-blink {
+            from { opacity: 1; }
+            to { opacity: 0.3; }
+        }
+        .light-label {
+            font-size: 8px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .amp-fan {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            position: relative;
+            animation: fan-rotate 0.8s linear infinite;
+        }
+        .amp-fan.fast {
+            animation-duration: 0.2s;
+        }
+        .amp-fan.medium {
+            animation-duration: 0.5s;
+        }
+        @keyframes fan-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .amp-fan::before,
+        .amp-fan::after {
+            content: '';
+            position: absolute;
+            background: #3a3a3a;
+        }
+        .amp-fan::before {
+            width: 100%;
+            height: 3px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+        .amp-fan::after {
+            width: 3px;
+            height: 100%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        /* Sub temp */
-        .temp-display {
-            font-size: 11px;
-            color: #666;
-        }
-
-        .temp-display span {
-            color: #ff8800;
-            font-weight: 600;
-        }
-
-        /* Controls */
-        .hu-controls {
+        /* ==================== INFO DISPLAYS ==================== */
+        .info-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 20px;
         }
+        .info-card {
+            background: #0a0a0f;
+            border: 1px solid #222;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        .info-card-label {
+            font-size: 9px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .info-card-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0,255,136,0.3);
+            transition: color 0.2s;
+        }
+        .info-card-value.warning {
+            color: var(--neon-orange);
+            text-shadow: 0 0 10px rgba(255,136,0,0.3);
+        }
+        .info-card-value.danger {
+            color: var(--neon-red);
+            text-shadow: 0 0 15px rgba(255,0,68,0.5);
+        }
 
-        .hu-btn {
-            background: linear-gradient(180deg, #2a2a3e 0%, #1a1a2e 100%);
-            border: 1px solid #3a3a4e;
-            border-radius: 10px;
-            padding: 15px 10px;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
+        /* ==================== CONTROLS ==================== */
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .ctrl-btn {
+            padding: 14px 10px;
+            background: linear-gradient(145deg, #1e1e28 0%, #16161e 100%);
+            border: 1px solid #2a2a3a;
+            border-radius: 8px;
+            color: #aaa;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
             text-transform: uppercase;
             letter-spacing: 1px;
             display: flex;
@@ -429,1376 +666,933 @@
             align-items: center;
             gap: 5px;
         }
-
-        .hu-btn:hover {
-            background: linear-gradient(180deg, #3a3a4e 0%, #2a2a3e 100%);
-            border-color: #00ff88;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        .ctrl-btn:hover {
+            border-color: var(--neon-green);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0,255,136,0.1);
+        }
+        .ctrl-btn:active {
+            transform: scale(0.97);
+        }
+        .ctrl-btn .icon {
+            font-size: 18px;
+        }
+        .ctrl-btn.primary {
+            background: linear-gradient(145deg, #1a3a2a 0%, #0d2a1a 100%);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+        }
+        .ctrl-btn.primary:hover {
+            box-shadow: 0 0 20px rgba(0,255,136,0.2);
+        }
+        .ctrl-btn.bass-btn {
+            background: linear-gradient(145deg, #3a0a1a 0%, #2a0a12 100%);
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+        }
+        .ctrl-btn.bass-btn:hover {
+            box-shadow: 0 0 20px rgba(255,0,68,0.2);
+        }
+        .ctrl-btn.bass-btn.active {
+            background: linear-gradient(145deg, #5a0a2a 0%, #4a0a1a 100%);
+            box-shadow: 0 0 25px rgba(255,0,68,0.4), inset 0 0 20px rgba(255,0,68,0.1);
+            text-shadow: 0 0 10px rgba(255,0,68,0.5);
+            color: #fff;
         }
 
-        .hu-btn:active {
+        .slider-group {
+            margin-bottom: 15px;
+        }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .slider-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .slider-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            color: var(--neon-green);
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: #0a0a0f;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            border: 1px solid #222;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,255,136,0.4);
+            border: 2px solid #fff;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(0,255,136,0.4);
+        }
+
+        .file-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .file-btn {
+            flex: 1;
+            padding: 10px;
+            background: #0a0a0f;
+            border: 1px dashed #333;
+            border-radius: 6px;
+            color: #555;
+            font-size: 11px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .file-btn:hover {
+            border-color: var(--neon-green);
+            color: #888;
+        }
+        .file-btn.has-file {
+            border-style: solid;
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+        }
+        .file-input {
+            display: none;
+        }
+
+        .canvas-panel {
+            margin-bottom: 15px;
+        }
+        .canvas-title {
+            font-size: 10px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        canvas {
+            width: 100%;
+            background: #0a0a0f;
+            border: 1px solid #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .overload-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--neon-red);
+            color: #fff;
+            text-align: center;
+            padding: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.3s;
+            box-shadow: 0 5px 30px rgba(255,0,68,0.5);
+        }
+        .overload-banner.show {
             transform: translateY(0);
         }
 
-        .hu-btn .icon {
-            font-size: 20px;
+        .power-bar-section {
+            background: #0a0a0f;
+            border: 1px solid #1a1a1a;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
-
-        .hu-btn.play-pause.active {
-            background: linear-gradient(180deg, #00ff88 0%, #00cc66 100%);
-            color: #000;
-            border-color: #00ff88;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-        }
-
-        /* Power Slider */
-        .slider-section {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #1a1a2e;
-        }
-
-        .slider-label {
+        .power-bar-header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 10px;
-            font-size: 11px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 2px;
         }
-
-        .power-slider {
-            width: 100%;
-            height: 8px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: #111;
-            border-radius: 4px;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .power-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00ff88, #00ccff);
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
-            border: 2px solid #fff;
-            transition: transform 0.2s ease;
-        }
-
-        .power-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        .power-slider::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00ff88, #00ccff);
-            cursor: pointer;
-            border: 2px solid #fff;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
-        }
-
-        .slider-marks {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
+        .power-bar-label {
             font-size: 10px;
             color: #444;
-        }
-
-        /* ============================================
-           AMPLIFIER SECTION (JBL)
-           ============================================ */
-        .amp-section {
-            position: relative;
-            z-index: 1;
-            max-width: 500px;
-            margin: 0 auto 40px;
-            text-align: center;
-        }
-
-        .amp-brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .amp-brand img {
-            height: 30px;
-            width: auto;
-            filter: brightness(0) invert(1);
-        }
-
-        .amp-brand span {
-            font-size: 12px;
-            color: #666;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-
-        .amplifier {
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-            border-radius: 15px;
-            padding: 30px;
-            border: 2px solid #2a2a2a;
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.8),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            position: relative;
+        .power-bar-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            color: var(--neon-green);
         }
-
-        .amp-heat-sinks {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .heat-sink {
-            width: 12px;
-            height: 40px;
-            background: linear-gradient(180deg, #333 0%, #1a1a1a 100%);
-            border-radius: 2px;
-        }
-
-        .amp-leds {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-        }
-
-        .led-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .led {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #222;
-            border: 2px solid #333;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .led.power {
-            background: #00ff88;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
-            border-color: #00ff88;
-        }
-
-        .led.protect {
-            background: #222;
-            border-color: #333;
-        }
-
-        .led.protect.active {
-            background: #ff4444;
-            box-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
-            border-color: #ff4444;
-            animation: protect-blink 0.2s infinite;
-        }
-
-        @keyframes protect-blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
-        }
-
-        .led-label {
-            font-size: 10px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .amp-info {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .amp-stat {
-            text-align: center;
-        }
-
-        .amp-stat-value {
-            font-size: 20px;
-            font-weight: 900;
-            color: #00ff88;
-            font-family: 'Courier New', monospace;
-        }
-
-        .amp-stat-label {
-            font-size: 10px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
-        }
-
-        /* ============================================
-           SUBWOOFER SECTION (PRIDE)
-           ============================================ */
-        .sub-section {
-            position: relative;
-            z-index: 1;
-            max-width: 500px;
-            margin: 0 auto 40px;
-            text-align: center;
-        }
-
-        .sub-brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .sub-brand img {
-            height: 30px;
-            width: auto;
-            filter: brightness(0) invert(1);
-        }
-
-        .sub-brand span {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .subwoofer-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .subwoofer {
-            width: 350px;
-            height: 350px;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            border: 3px solid #2a2a2a;
-        }
-
-        .subwoofer img {
+        .power-bar-track {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.05s ease;
-        }
-
-        .subwoofer.vibrating img {
-            animation: sub-vibrate 0.05s infinite;
-        }
-
-        @keyframes sub-vibrate {
-            0% { transform: scale(1) translate(0, 0); }
-            25% { transform: scale(1.02) translate(-1px, 1px); }
-            50% { transform: scale(1) translate(1px, -1px); }
-            75% { transform: scale(1.02) translate(-1px, -1px); }
-            100% { transform: scale(1) translate(1px, 1px); }
-        }
-
-        /* Smoke effect */
-        .smoke-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 1s ease;
-            z-index: 10;
-        }
-
-        .smoke-overlay.active {
-            opacity: 1;
-        }
-
-        .smoke-particle {
-            position: absolute;
-            background: radial-gradient(circle, rgba(150, 150, 150, 0.8) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: smoke-rise 3s infinite;
-        }
-
-        @keyframes smoke-rise {
-            0% {
-                transform: translateY(0) scale(0.5);
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-200px) scale(3);
-                opacity: 0;
-            }
-        }
-
-        /* Sparks */
-        .sparks {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            z-index: 11;
-        }
-
-        .spark {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #ffaa00;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #ffaa00;
-            animation: spark-fly 0.5s ease-out forwards;
-        }
-
-        @keyframes spark-fly {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--tx), var(--ty)) scale(0);
-                opacity: 0;
-            }
-        }
-
-        /* Burn mark */
-        .burn-mark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, rgba(50, 30, 10, 0.9) 0%, transparent 70%);
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 2s ease;
-            pointer-events: none;
-            z-index: 9;
-        }
-
-        .burn-mark.active {
-            opacity: 1;
-        }
-
-        /* Replace button */
-        .replace-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: linear-gradient(135deg, #ff4444, #cc0000);
-            color: #fff;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            z-index: 20;
-            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.5);
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            animation: replace-pulse 1s infinite;
-        }
-
-        .replace-btn.show {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        @keyframes replace-pulse {
-            0%, 100% { box-shadow: 0 10px 30px rgba(255, 68, 68, 0.5); }
-            50% { box-shadow: 0 10px 40px rgba(255, 68, 68, 0.8); }
-        }
-
-        .replace-btn:hover {
-            background: linear-gradient(135deg, #ff6666, #ff0000);
-        }
-
-        /* ============================================
-           SPEAKERS SECTION (FIERO)
-           ============================================ */
-        .speakers-section {
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
-            margin: 0 auto 40px;
-            text-align: center;
-        }
-
-        .speakers-brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .speakers-brand img {
-            height: 30px;
-            width: auto;
-            filter: brightness(0) invert(1);
-        }
-
-        .speakers-brand span {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .speakers-row {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-
-        .speaker-unit {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-            border: 3px solid #2a2a2a;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .speaker-unit::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60%;
-            height: 60%;
-            border-radius: 50%;
-            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
-            border: 2px solid #333;
-        }
-
-        .speaker-unit::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 30%;
-            height: 30%;
-            border-radius: 50%;
+            height: 8px;
             background: #111;
-            border: 1px solid #333;
-        }
-
-        .speaker-unit.vibrating {
-            animation: speaker-pump 0.1s infinite;
-        }
-
-        @keyframes speaker-pump {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .speaker-label {
-            margin-top: 10px;
-            font-size: 11px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* ============================================
-           OSCILLOSCOPE
-           ============================================ */
-        .scope-section {
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-
-        .scope-title {
-            text-align: center;
-            font-size: 11px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-        }
-
-        .oscilloscope {
-            background: #000;
-            border-radius: 8px;
-            height: 120px;
-            border: 1px solid #1a1a2e;
-            position: relative;
+            border-radius: 4px;
             overflow: hidden;
+            position: relative;
         }
-
-        .oscilloscope::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: rgba(0, 255, 136, 0.1);
-        }
-
-        .scope-canvas {
-            width: 100%;
+        .power-bar-fill {
             height: 100%;
-            display: block;
+            width: 0%;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-orange), var(--neon-red));
+            border-radius: 4px;
+            transition: width 0.1s ease-out;
         }
-
-        /* ============================================
-           WARNING BEEP INDICATOR
-           ============================================ */
-        .beep-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 68, 68, 0.9);
-            color: #fff;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            z-index: 1000;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.4);
+        .power-bar-marks {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
         }
-
-        .beep-indicator.show {
-            transform: translateX(0);
+        .power-bar-mark {
+            font-size: 9px;
+            color: #333;
+            font-family: 'Orbitron', sans-serif;
         }
-
-        .beep-indicator::before {
-            content: '🔊 ';
+        .power-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
         }
-
-        /* ============================================
-           SCREEN SHAKE
-           ============================================ */
-        .screen-shake {
-            animation: shake 0.1s infinite;
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--neon-green);
+            box-shadow: 0 0 8px rgba(0,255,136,0.5);
         }
-
-        @keyframes shake {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(-2px, 2px); }
-            50% { transform: translate(2px, -2px); }
-            75% { transform: translate(-2px, -2px); }
-            100% { transform: translate(2px, 2px); }
+        .status-text {
+            font-size: 10px;
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
         }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 600px) {
-            .subwoofer {
-                width: 280px;
-                height: 280px;
-            }
-            
-            .hu-controls {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .tv-brand img, .amp-brand img, .sub-brand img, .speakers-brand img {
-                height: 20px;
-            }
-        }
-
-        /* ============================================
-           HIDDEN STATE
-           ============================================ */
-        .hidden {
-            display: none !important;
+        .temp-text {
+            font-size: 10px;
+            color: #444;
+            font-family: 'Orbitron', sans-serif;
         }
     </style>
 </head>
 <body>
-    <div class="room">
-        <!-- TV Section -->
-        <div class="tv-section">
-            <div class="tv-brand">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/2560px-Samsung_Logo.svg.png" alt="Samsung" onerror="this.style.display='none'">
-                <span>Smart TV</span>
+    <div class="overload-banner" id="overloadBanner">
+        ⚠️ ПЕРЕГРУЗКА — УМЕНЬШИТЕ МОЩНОСТЬ ⚠️
+    </div>
+
+    <div class="os-header">
+        <div class="os-title">BASS OS</div>
+    </div>
+
+    <div class="main-grid">
+        <!-- LEFT COLUMN -->
+        <div class="left-col">
+            <div class="panel tv-section">
+                <div class="panel-title">Display</div>
+                <div class="tv-frame">
+                    <div class="tv-screen" id="tvScreen">
+                        <video id="videoPlayer" loop></video>
+                        <div class="vinyl-disc" id="vinylDisc">
+                            <div class="vinyl-label"></div>
+                        </div>
+                        <div class="tv-text" id="tvText">NO SIGNAL</div>
+                    </div>
+                </div>
             </div>
-            <div class="tv-frame">
-                <div class="tv-screen" id="tvScreen">
-                    <div class="bass-os-tv">
-                        <div class="logo-big">BASS OS</div>
-                        <div class="subtitle">Audio System</div>
-                        <div class="visualizer-tv" id="tvVisualizer"></div>
+
+            <div class="panel canvas-panel">
+                <div class="canvas-title">Spectrum Analyzer</div>
+                <canvas id="spectrumCanvas" height="120"></canvas>
+            </div>
+
+            <div class="panel canvas-panel">
+                <div class="canvas-title">Oscilloscope</div>
+                <canvas id="waveformCanvas" height="100"></canvas>
+            </div>
+        </div>
+
+        <!-- CENTER COLUMN -->
+        <div class="center-col">
+            <div class="panel sub-section">
+                <div class="panel-title">Dual 12" Subwoofer</div>
+                <div class="sub-enclosure">
+                    <div class="sub-brand">Thunder Bass</div>
+                    <div class="sub-woofers">
+                        <div class="woofer-unit">
+                            <div class="woofer-frame"></div>
+                            <div class="woofer-cone" id="wooferCone1">
+                                <div class="woofer-dustcap" id="dustcap1"></div>
+                            </div>
+                            <div class="woofer-surround"></div>
+                            <div class="woofer-grill">
+                                <div class="grill-bar"></div>
+                                <div class="grill-bar"></div>
+                                <div class="grill-bar"></div>
+                                <div class="grill-bar"></div>
+                            </div>
+                            <div class="led-ring" id="ledRing1"></div>
+                        </div>
+                        <div class="woofer-unit">
+                            <div class="woofer-frame"></div>
+                            <div class="woofer-cone" id="wooferCone2">
+                                <div class="woofer-dustcap" id="dustcap2"></div>
+                            </div>
+                            <div class="woofer-surround"></div>
+                            <div class="woofer-grill">
+                                <div class="grill-bar"></div>
+                                <div class="grill-bar"></div>
+                                <div class="grill-bar"></div>
+                                <div class="grill-bar"></div>
+                            </div>
+                            <div class="led-ring" id="ledRing2"></div>
+                        </div>
+                    </div>
+                    <div class="sub-port" id="subPort"></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">High & Mid Range</div>
+                <div class="satellites">
+                    <div>
+                        <div class="sat-label">Mid 6"</div>
+                        <div class="mid-unit">
+                            <div class="mid-frame"></div>
+                            <div class="mid-cone" id="midCone"></div>
+                            <div class="mid-dustcap"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="sat-label">Tweeter 1"</div>
+                        <div class="tweet-unit">
+                            <div class="tweet-frame"></div>
+                            <div class="tweet-dome" id="tweetDome"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel amp-section">
+                <div class="panel-title">Monoblock Amplifier</div>
+                <div class="amp-body">
+                    <div class="amp-name">M3.5 SERIES — 5000W MAX</div>
+                    <div class="amp-display-row">
+                        <div class="vu-section">
+                            <div class="vu-channel">
+                                <div class="vu-label">L</div>
+                                <div class="vu-scale">
+                                    <div class="vu-fill" id="vuFillL" style="height:0%"></div>
+                                </div>
+                            </div>
+                            <div class="vu-channel">
+                                <div class="vu-label">R</div>
+                                <div class="vu-scale">
+                                    <div class="vu-fill" id="vuFillR" style="height:0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="amp-lights">
+                            <div class="amp-light">
+                                <div class="light-bulb power" id="powerBulb"></div>
+                                <div class="light-label">Power</div>
+                            </div>
+                            <div class="amp-light">
+                                <div class="light-bulb" id="protectBulb"></div>
+                                <div class="light-label">Protect</div>
+                            </div>
+                            <div class="amp-light">
+                                <div class="light-bulb" id="clipBulb"></div>
+                                <div class="light-label">Clip</div>
+                            </div>
+                        </div>
+                        <div class="amp-fan slow" id="ampFan"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Head Unit / Magnitola -->
-        <div class="head-unit-section">
-            <div class="head-unit">
-                <div class="hu-screen" id="huScreen">
-                    <div class="display-main">
-                        <div class="track-info">
-                            <div class="track-name" id="trackName">Bass Test - 30Hz</div>
-                            <div class="track-artist">Sub Simulator</div>
-                        </div>
-                        
-                        <div class="power-section">
-                            <div class="power-label">
-                                <span>Output Power</span>
-                                <div class="power-value" id="powerValue">0 W</div>
-                            </div>
-                            <div class="power-bar-container">
-                                <div class="power-bar-fill safe" id="powerBar" style="width: 0%"></div>
-                                <div class="max-power-marker" style="left: 78.9%;">
-                                    <div class="max-power-label">MAX 15000W</div>
-                                </div>
-                            </div>
-                            <div class="status-row">
-                                <div class="status-indicator">
-                                    <div class="status-dot" id="statusDot"></div>
-                                    <span id="statusText">OK</span>
-                                </div>
-                                <div class="temp-display">
-                                    Temp: <span id="subTemp">35°C</span>
-                                </div>
-                            </div>
-                        </div>
+        <!-- RIGHT COLUMN -->
+        <div class="right-col">
+            <div class="power-bar-section">
+                <div class="power-bar-header">
+                    <span class="power-bar-label">Output Power</span>
+                    <span class="power-bar-value" id="powerOutValue">0 W</span>
+                </div>
+                <div class="power-bar-track">
+                    <div class="power-bar-fill" id="powerBarFill" style="width:0%"></div>
+                </div>
+                <div class="power-bar-marks">
+                    <span class="power-bar-mark">0W</span>
+                    <span class="power-bar-mark">1k</span>
+                    <span class="power-bar-mark">2k</span>
+                    <span class="power-bar-mark">3k</span>
+                    <span class="power-bar-mark">4k</span>
+                    <span class="power-bar-mark">5k</span>
+                </div>
+                <div class="power-status">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <div class="status-dot" id="statusDot"></div>
+                        <span class="status-text" id="statusText">OK</span>
                     </div>
+                    <span class="temp-text" id="tempText">Temp: 34°C</span>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-card-label">Frequency</div>
+                    <div class="info-card-value" id="freqCard">0 Hz</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-label">Consumption</div>
+                    <div class="info-card-value" id="consumptionCard">0 W</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-label">Peak Power</div>
+                    <div class="info-card-value" id="peakCard">0 W</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-label">Gain</div>
+                    <div class="info-card-value" id="gainCard">0 dB</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">Control Center</div>
+
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span class="slider-label">Amplifier Watts</span>
+                        <span class="slider-value" id="wattsDisplay">1000 W</span>
+                    </div>
+                    <input type="range" id="wattsSlider" min="100" max="5000" value="1000" step="100">
+                </div>
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span class="slider-label">Volume</span>
+                        <span class="slider-value" id="volumeDisplay">50%</span>
+                    </div>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="50">
                 </div>
 
-                <div class="hu-controls">
-                    <button class="hu-btn play-pause" id="playBtn" onclick="togglePlay()">
+                <div class="control-grid">
+                    <button class="ctrl-btn primary" id="playBtn" disabled>
                         <span class="icon">▶</span>
-                        <span>Play</span>
+                        <span>PLAY</span>
                     </button>
-                    <button class="hu-btn" onclick="changeVolume(-5)">
-                        <span class="icon">🔉</span>
-                        <span>Vol -</span>
+                    <button class="ctrl-btn" id="pauseBtn" disabled>
+                        <span class="icon">⏸</span>
+                        <span>PAUSE</span>
                     </button>
-                    <button class="hu-btn" onclick="changeVolume(5)">
-                        <span class="icon">🔊</span>
-                        <span>Vol +</span>
+                    <button class="ctrl-btn" id="stopBtn" disabled>
+                        <span class="icon">⏹</span>
+                        <span>STOP</span>
                     </button>
-                    <button class="hu-btn" onclick="changeBass(-2)">
-                        <span class="icon">📉</span>
-                        <span>Bass -</span>
-                    </button>
-                    <button class="hu-btn" onclick="changeBass(2)">
-                        <span class="icon">📈</span>
-                        <span>Bass +</span>
-                    </button>
-                    <button class="hu-btn" onclick="resetSystem()">
-                        <span class="icon">🔄</span>
-                        <span>Reset</span>
-                    </button>
-                    <button class="hu-btn" onclick="toggleDemo()">
-                        <span class="icon">🎵</span>
-                        <span>Demo</span>
-                    </button>
-                    <button class="hu-btn" onclick="window.location.href='index.html'">
-                        <span class="icon">🏠</span>
-                        <span>Home</span>
+                    <button class="ctrl-btn" id="resetBtn">
+                        <span class="icon">↺</span>
+                        <span>RESET</span>
                     </button>
                 </div>
 
-                <div class="slider-section">
-                    <div class="slider-label">
-                        <span>Power Control</span>
-                        <span id="sliderValue">0W</span>
-                    </div>
-                    <input type="range" class="power-slider" id="powerSlider" 
-                           min="0" max="19000" value="0" step="100"
-                           oninput="updatePower(this.value)">
-                    <div class="slider-marks">
-                        <span>0W</span>
-                        <span>5k</span>
-                        <span>10k</span>
-                        <span>15k</span>
-                        <span>19k</span>
-                    </div>
-                </div>
+                <button class="ctrl-btn bass-btn" id="bassBoostBtn" style="width:100%;margin-top:10px">
+                    <span class="icon">🔊</span>
+                    <span>BASS BOOST</span>
+                </button>
             </div>
-        </div>
 
-        <!-- Amplifier Section -->
-        <div class="amp-section">
-            <div class="amp-brand">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/JBL_Logo.svg/1200px-JBL_Logo.svg.png" alt="JBL" onerror="this.style.display='none'">
-                <span>Monoblock Amplifier</span>
-            </div>
-            <div class="amplifier" id="amplifier">
-                <div class="amp-heat-sinks">
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
-                    <div class="heat-sink"></div>
+            <div class="panel">
+                <div class="panel-title">Media Input</div>
+                <div class="file-row">
+                    <label class="file-btn" id="audioFileLabel">
+                        📁 MP3
+                        <input type="file" class="file-input" id="audioFile" accept="audio/*">
+                    </label>
+                    <label class="file-btn" id="videoFileLabel">
+                        📁 MP4
+                        <input type="file" class="file-input" id="videoFile" accept="video/*">
+                    </label>
                 </div>
-                <div class="amp-leds">
-                    <div class="led-group">
-                        <div class="led power" id="powerLed"></div>
-                        <div class="led-label">Power</div>
-                    </div>
-                    <div class="led-group">
-                        <div class="led protect" id="protectLed"></div>
-                        <div class="led-label">Protect</div>
-                    </div>
+                <div style="font-size:10px;color:#333;text-align:center;margin-top:5px" id="fileStatus">
+                    No file loaded
                 </div>
-                <div class="amp-info">
-                    <div class="amp-stat">
-                        <div class="amp-stat-value" id="ampWatts">0</div>
-                        <div class="amp-stat-label">Watts</div>
-                    </div>
-                    <div class="amp-stat">
-                        <div class="amp-stat-value" id="ampVolts">14.4</div>
-                        <div class="amp-stat-label">Volts</div>
-                    </div>
-                    <div class="amp-stat">
-                        <div class="amp-stat-value" id="ampAmps">0</div>
-                        <div class="amp-stat-label">Amps</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Subwoofer Section -->
-        <div class="sub-section">
-            <div class="sub-brand">
-                <img src="https://www.prideaudio.com/wp-content/uploads/2021/03/logo-pride-white.png" alt="Pride" onerror="this.style.display='none'">
-                <span>M3.5 Series</span>
-            </div>
-            <div class="subwoofer-container">
-                <div class="subwoofer" id="subwoofer">
-                    <img src="https://i.imgur.com/8JZvQ1L.jpg" alt="Pride M3.5 Subwoofer" id="subImg">
-                    <div class="smoke-overlay" id="smokeOverlay"></div>
-                    <div class="sparks" id="sparks"></div>
-                    <div class="burn-mark" id="burnMark"></div>
-                    <button class="replace-btn" id="replaceBtn" onclick="replaceSub()">Заменить сабвуфер</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Speakers Section -->
-        <div class="speakers-section">
-            <div class="speakers-brand">
-                <img src="https://i.imgur.com/fiero-logo.png" alt="Fiero" onerror="this.style.display='none'">
-                <span>High & Mid Range</span>
-            </div>
-            <div class="speakers-row">
-                <div>
-                    <div class="speaker-unit" id="speaker1"></div>
-                    <div class="speaker-label">Tweeter</div>
-                </div>
-                <div>
-                    <div class="speaker-unit" id="speaker2"></div>
-                    <div class="speaker-label">Mid</div>
-                </div>
-                <div>
-                    <div class="speaker-unit" id="speaker3"></div>
-                    <div class="speaker-label">Mid</div>
-                </div>
-                <div>
-                    <div class="speaker-unit" id="speaker4"></div>
-                    <div class="speaker-label">Tweeter</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Oscilloscope -->
-        <div class="scope-section">
-            <div class="scope-title">Real-time Waveform</div>
-            <div class="oscilloscope">
-                <canvas class="scope-canvas" id="scopeCanvas"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- Beep Warning -->
-    <div class="beep-indicator" id="beepIndicator">WARNING: OVERLOAD!</div>
-
     <script>
-        // ============================================
-        // AUDIO ENGINE
-        // ============================================
         let audioCtx = null;
-        let oscillator = null;
+        let sourceNode = null;
+        let analyserNode = null;
         let gainNode = null;
-        let analyser = null;
+        let bassNode = null;
+        let audioEl = null;
         let isPlaying = false;
-        let currentFrequency = 35;
+        let animId = null;
 
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioCtx.createAnalyser();
-                analyser.fftSize = 2048;
-            }
+        let watts = 1000;
+        let vol = 0.5;
+        let bassBoostOn = false;
+        let peakPower = 0;
+        let temp = 34;
+
+        const $ = id => document.getElementById(id);
+
+        const wattsSlider = $('wattsSlider');
+        const volumeSlider = $('volumeSlider');
+        const wattsDisplay = $('wattsDisplay');
+        const volumeDisplay = $('volumeDisplay');
+        const bassBoostBtn = $('bassBoostBtn');
+        const playBtn = $('playBtn');
+        const pauseBtn = $('pauseBtn');
+        const stopBtn = $('stopBtn');
+        const resetBtn = $('resetBtn');
+        const audioFile = $('audioFile');
+        const videoFile = $('videoFile');
+        const audioFileLabel = $('audioFileLabel');
+        const videoFileLabel = $('videoFileLabel');
+        const fileStatus = $('fileStatus');
+        const videoPlayer = $('videoPlayer');
+        const vinylDisc = $('vinylDisc');
+        const tvText = $('tvText');
+
+        const wooferCone1 = $('wooferCone1');
+        const wooferCone2 = $('wooferCone2');
+        const dustcap1 = $('dustcap1');
+        const dustcap2 = $('dustcap2');
+        const ledRing1 = $('ledRing1');
+        const ledRing2 = $('ledRing2');
+        const midCone = $('midCone');
+        const tweetDome = $('tweetDome');
+        const subPort = $('subPort');
+
+        const vuFillL = $('vuFillL');
+        const vuFillR = $('vuFillR');
+        const clipBulb = $('clipBulb');
+        const protectBulb = $('protectBulb');
+        const ampFan = $('ampFan');
+
+        const powerOutValue = $('powerOutValue');
+        const powerBarFill = $('powerBarFill');
+        const statusDot = $('statusDot');
+        const statusText = $('statusText');
+        const tempText = $('tempText');
+        const freqCard = $('freqCard');
+        const consumptionCard = $('consumptionCard');
+        const peakCard = $('peakCard');
+        const gainCard = $('gainCard');
+        const overloadBanner = $('overloadBanner');
+
+        const spectrumCanvas = $('spectrumCanvas');
+        const waveformCanvas = $('waveformCanvas');
+        const spectrumCtx = spectrumCanvas.getContext('2d');
+        const waveformCtx = waveformCanvas.getContext('2d');
+
+        function resizeCanvas() {
+            spectrumCanvas.width = spectrumCanvas.offsetWidth;
+            spectrumCanvas.height = spectrumCanvas.offsetHeight;
+            waveformCanvas.width = waveformCanvas.offsetWidth;
+            waveformCanvas.height = waveformCanvas.offsetHeight;
         }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
 
-        function playTone(freq, volume) {
-            initAudio();
-            stopTone();
-            
-            oscillator = audioCtx.createOscillator();
-            gainNode = audioCtx.createGain();
-            
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            
-            gainNode.gain.setValueAtTime(volume * 0.3, audioCtx.currentTime);
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(analyser);
-            analyser.connect(audioCtx.destination);
-            
-            oscillator.start();
-            isPlaying = true;
-            updatePlayButton();
-        }
-
-        function stopTone() {
-            if (oscillator) {
-                oscillator.stop();
-                oscillator.disconnect();
-                oscillator = null;
-            }
-            isPlaying = false;
-            updatePlayButton();
-        }
-
-        function updatePlayButton() {
-            const btn = document.getElementById('playBtn');
-            if (isPlaying) {
-                btn.classList.add('active');
-                btn.querySelector('.icon').textContent = '⏸';
-                btn.querySelector('span:last-child').textContent = 'Pause';
-            } else {
-                btn.classList.remove('active');
-                btn.querySelector('.icon').textContent = '▶';
-                btn.querySelector('span:last-child').textContent = 'Play';
-            }
-        }
-
-        function togglePlay() {
-            if (isPlaying) {
-                stopTone();
-            } else {
-                if (isDead) {
-                    replaceSub();
-                    return;
-                }
-                playTone(currentFrequency, currentPower / 19000);
-            }
-        }
-
-        // ============================================
-        // SYSTEM STATE
-        // ============================================
-        let currentPower = 0;
-        let maxSubPower = 15000;
-        let isOverloaded = false;
-        let isDead = false;
-        let beepInterval = null;
-        let protectInterval = null;
-        let tempInterval = null;
-        let subTemp = 35;
-        let volume = 50;
-        let bassLevel = 0;
-        let demoMode = false;
-
-        // ============================================
-        // POWER CONTROL
-        // ============================================
-        function updatePower(value) {
-            if (isDead) return;
-            
-            currentPower = parseInt(value);
-            document.getElementById('powerSlider').value = currentPower;
-            document.getElementById('sliderValue').textContent = currentPower + 'W';
-            document.getElementById('powerValue').textContent = currentPower + ' W';
-            document.getElementById('ampWatts').textContent = currentPower;
-            
-            // Update power bar
-            const percentage = (currentPower / 19000) * 100;
-            const bar = document.getElementById('powerBar');
-            bar.style.width = percentage + '%';
-            
-            // Update color
-            const valueDisplay = document.getElementById('powerValue');
-            if (currentPower > 15000) {
-                bar.className = 'power-bar-fill danger';
-                valueDisplay.className = 'power-value danger';
-            } else if (currentPower > 12000) {
-                bar.className = 'power-bar-fill warning';
-                valueDisplay.className = 'power-value warning';
-            } else {
-                bar.className = 'power-bar-fill safe';
-                valueDisplay.className = 'power-value';
-            }
-            
-            // Update status
-            updateStatus();
-            
-            // Check overload
-            if (currentPower > 15000 && !isOverloaded && !isDead) {
-                triggerOverload();
-            } else if (currentPower <= 15000 && isOverloaded && !isDead) {
-                clearOverload();
-            }
-            
-            // Update audio volume if playing
-            if (isPlaying && gainNode) {
-                gainNode.gain.setValueAtTime((currentPower / 19000) * 0.3, audioCtx.currentTime);
-            }
-            
-            // Update vibration
-            updateVibration();
-        }
-
-        function updateStatus() {
-            const dot = document.getElementById('statusDot');
-            const text = document.getElementById('statusText');
-            
-            if (isDead) {
-                dot.className = 'status-dot smoke';
-                text.textContent = 'DEAD';
-                text.style.color = '#888';
-            } else if (isOverloaded) {
-                dot.className = 'status-dot danger';
-                text.textContent = 'PROTECT';
-                text.style.color = '#ff4444';
-            } else if (currentPower > 12000) {
-                dot.className = 'status-dot warning';
-                text.textContent = 'HOT';
-                text.style.color = '#ffaa00';
-            } else {
-                dot.className = 'status-dot';
-                text.textContent = 'OK';
-                text.style.color = '#00ff88';
-            }
-        }
-
-        // ============================================
-        // OVERLOAD SYSTEM
-        // ============================================
-        function triggerOverload() {
-            isOverloaded = true;
-            
-            // Start beeping every 10 seconds
-            if (!beepInterval) {
-                beepInterval = setInterval(() => {
-                    if (isDead) return;
-                    playBeep();
-                }, 10000);
-                playBeep(); // First beep immediately
-            }
-            
-            // Start protect LED blinking
-            document.getElementById('protectLed').classList.add('active');
-            
-            // Start temperature rise
-            if (!tempInterval) {
-                tempInterval = setInterval(() => {
-                    if (subTemp < 200 && !isDead) {
-                        subTemp += 5;
-                        document.getElementById('subTemp').textContent = subTemp + '°C';
-                        
-                        if (subTemp >= 150) {
-                            killSub();
-                        }
-                    }
-                }, 500);
-            }
-        }
-
-        function playBeep() {
-            if (!audioCtx) initAudio();
-            
-            const beepOsc = audioCtx.createOscillator();
-            const beepGain = audioCtx.createGain();
-            
-            beepOsc.type = 'square';
-            beepOsc.frequency.setValueAtTime(2000, audioCtx.currentTime);
-            beepGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            beepGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
-            
-            beepOsc.connect(beepGain);
-            beepGain.connect(audioCtx.destination);
-            
-            beepOsc.start();
-            beepOsc.stop(audioCtx.currentTime + 1);
-            
-            // Show warning
-            const indicator = document.getElementById('beepIndicator');
-            indicator.classList.add('show');
-            setTimeout(() => indicator.classList.remove('show'), 1000);
-            
-            // Screen shake
-            document.getElementById('huScreen').classList.add('screen-shake');
-            setTimeout(() => document.getElementById('huScreen').classList.remove('screen-shake'), 200);
-        }
-
-        function clearOverload() {
-            isOverloaded = false;
-            
-            if (beepInterval) {
-                clearInterval(beepInterval);
-                beepInterval = null;
-            }
-            
-            document.getElementById('protectLed').classList.remove('active');
-            
-            if (tempInterval) {
-                clearInterval(tempInterval);
-                tempInterval = null;
-            }
-            
-            // Cool down
-            const coolDown = setInterval(() => {
-                if (subTemp > 35 && currentPower <= 15000) {
-                    subTemp -= 2;
-                    document.getElementById('subTemp').textContent = subTemp + '°C';
-                } else {
-                    clearInterval(coolDown);
-                }
-            }, 300);
-        }
-
-        // ============================================
-        // KILL SUB (SMOKE & FIRE)
-        // ============================================
-        function killSub() {
-            if (isDead) return;
-            isDead = true;
-            isOverloaded = false;
-            
-            // Stop music
-            stopTone();
-            
-            // Clear intervals
-            if (beepInterval) clearInterval(beepInterval);
-            if (tempInterval) clearInterval(tempInterval);
-            
-            // Final beep
-            playBeep();
-            
-            // Stop protect LED
-            document.getElementById('protectLed').classList.remove('active');
-            
-            // Show smoke
-            const smokeOverlay = document.getElementById('smokeOverlay');
-            smokeOverlay.classList.add('active');
-            createSmoke();
-            
-            // Create sparks
-            createSparks();
-            
-            // Show burn mark
-            setTimeout(() => {
-                document.getElementById('burnMark').classList.add('active');
-            }, 1000);
-            
-            // Show replace button
-            setTimeout(() => {
-                document.getElementById('replaceBtn').classList.add('show');
-            }, 2000);
-            
-            // Update display
-            document.getElementById('trackName').textContent = 'SUB DESTROYED';
-            document.getElementById('trackName').style.color = '#ff4444';
-            updateStatus();
-            
-            // Stop vibration
-            document.getElementById('subwoofer').classList.remove('vibrating');
-            document.querySelectorAll('.speaker-unit').forEach(s => s.classList.remove('vibrating'));
-        }
-
-        function createSmoke() {
-            const overlay = document.getElementById('smokeOverlay');
-            for (let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.className = 'smoke-particle';
-                    particle.style.left = (30 + Math.random() * 40) + '%';
-                    particle.style.bottom = (20 + Math.random() * 30) + '%';
-                    particle.style.width = (20 + Math.random() * 40) + 'px';
-                    particle.style.height = particle.style.width;
-                    particle.style.animationDelay = (Math.random() * 2) + 's';
-                    particle.style.animationDuration = (2 + Math.random() * 2) + 's';
-                    overlay.appendChild(particle);
-                }, i * 200);
-            }
-        }
-
-        function createSparks() {
-            const container = document.getElementById('sparks');
-            for (let i = 0; i < 30; i++) {
-                setTimeout(() => {
-                    const spark = document.createElement('div');
-                    spark.className = 'spark';
-                    spark.style.left = (40 + Math.random() * 20) + '%';
-                    spark.style.top = (40 + Math.random() * 20) + '%';
-                    spark.style.setProperty('--tx', (Math.random() * 100 - 50) + 'px');
-                    spark.style.setProperty('--ty', (Math.random() * 100 - 50) + 'px');
-                    container.appendChild(spark);
-                    
-                    setTimeout(() => spark.remove(), 500);
-                }, i * 100);
-            }
-        }
-
-        // ============================================
-        // REPLACE SUB
-        // ============================================
-        function replaceSub() {
-            isDead = false;
-            isOverloaded = false;
-            subTemp = 35;
-            currentPower = 0;
-            
-            // Reset UI
-            document.getElementById('smokeOverlay').innerHTML = '';
-            document.getElementById('smokeOverlay').classList.remove('active');
-            document.getElementById('burnMark').classList.remove('active');
-            document.getElementById('replaceBtn').classList.remove('show');
-            document.getElementById('sparks').innerHTML = '';
-            
-            document.getElementById('trackName').textContent = 'Bass Test - 30Hz';
-            document.getElementById('trackName').style.color = '#00ff88';
-            
-            document.getElementById('powerSlider').value = 0;
-            updatePower(0);
-            
-            updateStatus();
-        }
-
-        // ============================================
-        // VIBRATION CONTROL
-        // ============================================
-        function updateVibration() {
-            const sub = document.getElementById('subwoofer');
-            const speakers = document.querySelectorAll('.speaker-unit');
-            
-            if (isPlaying && currentPower > 0 && !isDead) {
-                const intensity = currentPower / 19000;
-                
-                if (intensity > 0.3) {
-                    sub.classList.add('vibrating');
-                    speakers.forEach(s => s.classList.add('vibrating'));
-                    
-                    // Adjust animation speed based on power
-                    const duration = Math.max(0.02, 0.1 - (intensity * 0.08));
-                    sub.style.animationDuration = duration + 's';
-                } else {
-                    sub.classList.remove('vibrating');
-                    speakers.forEach(s => s.classList.remove('vibrating'));
-                }
-            } else {
-                sub.classList.remove('vibrating');
-                speakers.forEach(s => s.classList.remove('vibrating'));
-            }
-        }
-
-        // ============================================
-        // CONTROLS
-        // ============================================
-        function changeVolume(delta) {
-            volume = Math.max(0, Math.min(100, volume + delta));
-            if (isPlaying && gainNode) {
-                gainNode.gain.setValueAtTime((volume / 100) * (currentPower / 19000) * 0.3, audioCtx.currentTime);
-            }
-        }
-
-        function changeBass(delta) {
-            bassLevel = Math.max(-10, Math.min(10, bassLevel + delta));
-            if (isPlaying && oscillator) {
-                const baseFreq = 35;
-                const newFreq = baseFreq + (bassLevel * 2);
-                oscillator.frequency.setValueAtTime(newFreq, audioCtx.currentTime);
-            }
-        }
-
-        function resetSystem() {
-            stopTone();
-            clearOverload();
-            if (isDead) replaceSub();
-            currentPower = 0;
-            document.getElementById('powerSlider').value = 0;
-            updatePower(0);
-            demoMode = false;
-        }
-
-        function toggleDemo() {
-            demoMode = !demoMode;
-            if (demoMode) {
-                let power = 0;
-                let direction = 1;
-                const demoInterval = setInterval(() => {
-                    if (!demoMode || isDead) {
-                        clearInterval(demoInterval);
-                        return;
-                    }
-                    power += direction * 200;
-                    if (power >= 14000) direction = -1;
-                    if (power <= 0) direction = 1;
-                    updatePower(power);
-                }, 50);
-            }
-        }
-
-        // ============================================
-        // OSCILLOSCOPE
-        // ============================================
-        function drawOscilloscope() {
-            const canvas = document.getElementById('scopeCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            
-            const bufferLength = analyser ? analyser.frequencyBinCount : 128;
-            const dataArray = new Uint8Array(bufferLength);
-            
-            function draw() {
-                requestAnimationFrame(draw);
-                
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                if (!analyser || !isPlaying) {
-                    // Draw flat line
-                    ctx.strokeStyle = '#00ff88';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(0, canvas.height / 2);
-                    ctx.lineTo(canvas.width, canvas.height / 2);
-                    ctx.stroke();
-                    return;
-                }
-                
-                analyser.getByteTimeDomainData(dataArray);
-                
-                ctx.strokeStyle = '#00ff88';
-                ctx.lineWidth = 2;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = '#00ff88';
-                ctx.beginPath();
-                
-                const sliceWidth = canvas.width / bufferLength;
-                let x = 0;
-                
-                for (let i = 0; i < bufferLength; i++) {
-                    const v = dataArray[i] / 128.0;
-                    const y = (v * canvas.height) / 2;
-                    
-                    if (i === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                    
-                    x += sliceWidth;
-                }
-                
-                ctx.stroke();
-                ctx.shadowBlur = 0;
-            }
-            
-            draw();
-        }
-
-        // ============================================
-        // TV VISUALIZER
-        // ============================================
-        function createTVVisualizer() {
-            const container = document.getElementById('tvVisualizer');
-            container.innerHTML = '';
-            for (let i = 0; i < 40; i++) {
-                const bar = document.createElement('div');
-                bar.className = 'bar-tv';
-                bar.style.height = '5px';
-                container.appendChild(bar);
-            }
-        }
-
-        function updateTVVisualizer() {
-            const bars = document.querySelectorAll('.bar-tv');
-            if (!isPlaying) {
-                bars.forEach(bar => bar.style.height = '5px');
-                return;
-            }
-            
-            const intensity = currentPower / 19000;
-            bars.forEach((bar, i) => {
-                const height = Math.random() * 50 * intensity + 5;
-                bar.style.height = height + 'px';
-            });
-        }
-
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-        window.onload = function() {
-            createTVVisualizer();
-            drawOscilloscope();
-            
-            // Update visualizer
-            setInterval(updateTVVisualizer, 50);
-            
-            // Update amps calculation
-            setInterval(() => {
-                const amps = currentPower > 0 ? (currentPower / 14.4).toFixed(1) : 0;
-                document.getElementById('ampAmps').textContent = amps;
-            }, 200);
-        };
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            drawOscilloscope();
+        wattsSlider.addEventListener('input', e => {
+            watts = parseInt(e.target.value);
+            wattsDisplay.textContent = watts + ' W';
+            updateGain();
         });
+
+        volumeSlider.addEventListener('input', e => {
+            vol = parseInt(e.target.value) / 100;
+            volumeDisplay.textContent = Math.round(vol * 100) + '%';
+            if (gainNode) gainNode.gain.value = vol;
+            updateGain();
+        });
+
+        function updateGain() {
+            const db = 20 * Math.log10(vol * (watts / 1000));
+            gainCard.textContent = (isFinite(db) ? db : 0).toFixed(1) + ' dB';
+        }
+        updateGain();
+
+        bassBoostBtn.addEventListener('click', () => {
+            bassBoostOn = !bassBoostOn;
+            bassBoostBtn.classList.toggle('active', bassBoostOn);
+            if (bassNode) {
+                bassNode.gain.value = bassBoostOn ? 12 : 0;
+            }
+        });
+
+        let currentFile = null;
+        let isVideoFile = false;
+
+        audioFile.addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            currentFile = file;
+            isVideoFile = false;
+            audioFileLabel.classList.add('has-file');
+            videoFileLabel.classList.remove('has-file');
+            videoFile.value = '';
+            fileStatus.textContent = 'MP3: ' + file.name;
+            loadAudio(file);
+        });
+
+        videoFile.addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            currentFile = file;
+            isVideoFile = true;
+            videoFileLabel.classList.add('has-file');
+            audioFileLabel.classList.remove('has-file');
+            audioFile.value = '';
+            fileStatus.textContent = 'MP4: ' + file.name;
+            loadVideo(file);
+        });
+
+        function loadAudio(file) {
+            const url = URL.createObjectURL(file);
+            if (audioEl) { audioEl.pause(); audioEl.src = ''; }
+            audioEl = new Audio(url);
+            audioEl.loop = true;
+            videoPlayer.classList.remove('active');
+            vinylDisc.classList.add('active');
+            tvText.textContent = 'AUDIO LOADED';
+            setupAudio(audioEl);
+            enablePlayback();
+        }
+
+        function loadVideo(file) {
+            const url = URL.createObjectURL(file);
+            videoPlayer.src = url;
+            videoPlayer.classList.add('active');
+            vinylDisc.classList.remove('active');
+            tvText.textContent = '';
+            if (audioEl) { audioEl.pause(); }
+            audioEl = new Audio(url);
+            audioEl.loop = true;
+            setupAudio(audioEl);
+            enablePlayback();
+        }
+
+        function setupAudio(element) {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (sourceNode) { try { sourceNode.disconnect(); } catch(e){} }
+
+            sourceNode = audioCtx.createMediaElementSource(element);
+            analyserNode = audioCtx.createAnalyser();
+            analyserNode.fftSize = 2048;
+
+            gainNode = audioCtx.createGain();
+            gainNode.gain.value = vol;
+
+            bassNode = audioCtx.createBiquadFilter();
+            bassNode.type = 'lowshelf';
+            bassNode.frequency.value = 45;
+            bassNode.gain.value = bassBoostOn ? 12 : 0;
+
+            sourceNode.connect(bassNode);
+            bassNode.connect(gainNode);
+            gainNode.connect(analyserNode);
+            analyserNode.connect(audioCtx.destination);
+        }
+
+        function enablePlayback() {
+            playBtn.disabled = false;
+            pauseBtn.disabled = false;
+            stopBtn.disabled = false;
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (!audioEl) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            audioEl.play();
+            if (isVideoFile) videoPlayer.play();
+            isPlaying = true;
+            startViz();
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            if (audioEl) audioEl.pause();
+            if (isVideoFile) videoPlayer.pause();
+            isPlaying = false;
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; }
+            if (isVideoFile) { videoPlayer.pause(); videoPlayer.currentTime = 0; }
+            isPlaying = false;
+            resetViz();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            watts = 1000; vol = 0.5; bassBoostOn = false; peakPower = 0; temp = 34;
+            wattsSlider.value = 1000; volumeSlider.value = 50;
+            wattsDisplay.textContent = '1000 W'; volumeDisplay.textContent = '50%';
+            bassBoostBtn.classList.remove('active');
+            if (bassNode) bassNode.gain.value = 0;
+            if (gainNode) gainNode.gain.value = 0.5;
+            updateGain();
+            resetViz();
+        });
+
+        let smoothBass = 0, smoothMid = 0, smoothHigh = 0;
+
+        function startViz() {
+            if (animId) cancelAnimationFrame(animId);
+            drawFrame();
+        }
+
+        function resetViz() {
+            if (animId) cancelAnimationFrame(animId);
+
+            vuFillL.style.height = '0%';
+            vuFillR.style.height = '0%';
+            clipBulb.classList.remove('on');
+            protectBulb.classList.remove('on');
+            overloadBanner.classList.remove('show');
+
+            freqCard.textContent = '0 Hz';
+            consumptionCard.textContent = '0 W';
+            peakCard.textContent = peakPower + ' W';
+            powerOutValue.textContent = '0 W';
+            powerBarFill.style.width = '0%';
+            statusText.textContent = 'OK';
+            statusText.style.color = 'var(--neon-green)';
+            statusDot.style.background = 'var(--neon-green)';
+            statusDot.style.boxShadow = '0 0 8px rgba(0,255,136,0.5)';
+
+            wooferCone1.style.transform = 'translate(-50%, -50%) scale(1)';
+            wooferCone2.style.transform = 'translate(-50%, -50%) scale(1)';
+            midCone.style.transform = 'translate(-50%, -50%) scale(1)';
+            tweetDome.style.transform = 'translate(-50%, -50%) scale(1)';
+
+            ledRing1.style.boxShadow = '0 0 25px rgba(0,255,136,0.2)';
+            ledRing2.style.boxShadow = '0 0 25px rgba(0,255,136,0.2)';
+            dustcap1.style.boxShadow = '0 0 15px rgba(255,0,0,0.3)';
+            dustcap2.style.boxShadow = '0 0 15px rgba(255,0,0,0.3)';
+
+            spectrumCtx.fillStyle = '#0a0a0f';
+            spectrumCtx.fillRect(0, 0, spectrumCanvas.width, spectrumCanvas.height);
+            waveformCtx.fillStyle = '#0a0a0f';
+            waveformCtx.fillRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+
+            ampFan.className = 'amp-fan slow';
+        }
+
+        function drawFrame() {
+            animId = requestAnimationFrame(drawFrame);
+            if (!analyserNode) return;
+
+            const bufLen = analyserNode.frequencyBinCount;
+            const freqData = new Uint8Array(bufLen);
+            const timeData = new Uint8Array(bufLen);
+            analyserNode.getByteFrequencyData(freqData);
+            analyserNode.getByteTimeDomainData(timeData);
+
+            const bassEnd = Math.floor(bufLen * 0.05);
+            const midEnd = Math.floor(bufLen * 0.25);
+
+            let bassSum = 0, midSum = 0, highSum = 0;
+            let maxFreq = 0, maxVal = 0;
+
+            for (let i = 0; i < bufLen; i++) {
+                const v = freqData[i];
+                const f = (i * audioCtx.sampleRate) / (2 * bufLen);
+                if (i < bassEnd) bassSum += v;
+                else if (i < midEnd) midSum += v;
+                else highSum += v;
+                if (v > maxVal && f > 20 && f < 20000) { maxVal = v; maxFreq = f; }
+            }
+
+            const bassAvg = bassSum / bassEnd;
+            const midAvg = midSum / (midEnd - bassEnd);
+            const highAvg = highSum / (bufLen - midEnd);
+
+            smoothBass += (bassAvg - smoothBass) * 0.3;
+            smoothMid += (midAvg - smoothMid) * 0.3;
+            smoothHigh += (highAvg - smoothHigh) * 0.3;
+
+            const boostMult = bassBoostOn ? 1.5 : 1;
+            const rawPower = (smoothBass / 255) * watts * vol * boostMult;
+            const curPower = Math.min(rawPower, watts * 1.5);
+            if (curPower > peakPower) peakPower = curPower;
+
+            const targetTemp = 34 + (curPower / watts) * 40;
+            temp += (targetTemp - temp) * 0.02;
+
+            freqCard.textContent = Math.round(maxFreq) + ' Hz';
+            consumptionCard.textContent = Math.round(curPower) + ' W';
+            peakCard.textContent = Math.round(peakPower) + ' W';
+            powerOutValue.textContent = Math.round(curPower) + ' W';
+            powerBarFill.style.width = Math.min((curPower / 5000) * 100, 100) + '%';
+            tempText.textContent = 'Temp: ' + Math.round(temp) + '°C';
+
+            const powerRatio = curPower / (watts * 1.5);
+            const isClip = curPower > watts * 1.2;
+            const isOverload = curPower > watts * 1.3;
+
+            if (isOverload) {
+                statusText.textContent = 'OVERLOAD';
+                statusText.style.color = 'var(--neon-red)';
+                statusDot.style.background = 'var(--neon-red)';
+                statusDot.style.boxShadow = '0 0 12px rgba(255,0,68,0.8)';
+                overloadBanner.classList.add('show');
+            } else if (isClip) {
+                statusText.textContent = 'CLIP';
+                statusText.style.color = 'var(--neon-orange)';
+                statusDot.style.background = 'var(--neon-orange)';
+                statusDot.style.boxShadow = '0 0 8px rgba(255,136,0,0.5)';
+                overloadBanner.classList.remove('show');
+            } else {
+                statusText.textContent = 'OK';
+                statusText.style.color = 'var(--neon-green)';
+                statusDot.style.background = 'var(--neon-green)';
+                statusDot.style.boxShadow = '0 0 8px rgba(0,255,136,0.5)';
+                overloadBanner.classList.remove('show');
+            }
+
+            consumptionCard.className = 'info-card-value' + (isOverload ? ' danger' : isClip ? ' warning' : '');
+
+            const vuH = Math.min((curPower / watts) * 100, 100);
+            vuFillL.style.height = vuH + '%';
+            vuFillR.style.height = vuH + '%';
+
+            clipBulb.classList.toggle('on', isClip);
+            protectBulb.classList.toggle('on', isOverload);
+
+            if (curPower > watts * 0.8) ampFan.className = 'amp-fan fast';
+            else if (curPower > watts * 0.3) ampFan.className = 'amp-fan medium';
+            else ampFan.className = 'amp-fan slow';
+
+            const bassScale = 1 + (smoothBass / 255) * 0.2 * vol * (bassBoostOn ? 1.4 : 1);
+            const midScale = 1 + (smoothMid / 255) * 0.12 * vol;
+            const highScale = 1 + (smoothHigh / 255) * 0.06 * vol;
+
+            let w1s = bassScale, w2s = bassScale;
+            if (isClip) {
+                w1s = 1 + (Math.random() - 0.5) * 0.06;
+                w2s = 1 + (Math.random() - 0.5) * 0.06;
+            }
+
+            wooferCone1.style.transform = `translate(-50%, -50%) scale(${w1s})`;
+            wooferCone2.style.transform = `translate(-50%, -50%) scale(${w2s})`;
+            midCone.style.transform = `translate(-50%, -50%) scale(${midScale})`;
+            tweetDome.style.transform = `translate(-50%, -50%) scale(${highScale})`;
+
+            let r, g, b;
+            if (powerRatio < 0.33) {
+                const t = powerRatio / 0.33;
+                r = Math.round(t * 255); g = 255; b = 0;
+            } else if (powerRatio < 0.66) {
+                const t = (powerRatio - 0.33) / 0.33;
+                r = 255; g = Math.round(255 - t * 100); b = 0;
+            } else {
+                const t = (powerRatio - 0.66) / 0.34;
+                r = 255; g = Math.round(155 - t * 155); b = 0;
+            }
+
+            const glowInt = 15 + powerRatio * 50;
+            const glowCol = `rgba(${r},${g},${b},${0.3 + powerRatio * 0.7})`;
+            const ledShadow = `0 0 ${glowInt}px ${glowCol}`;
+
+            ledRing1.style.boxShadow = ledShadow;
+            ledRing2.style.boxShadow = ledShadow;
+            dustcap1.style.boxShadow = `0 0 ${10 + powerRatio * 30}px rgba(${r},${g},${b},${0.4 + powerRatio * 0.6})`;
+            dustcap2.style.boxShadow = `0 0 ${10 + powerRatio * 30}px rgba(${r},${g},${b},${0.4 + powerRatio * 0.6})`;
+
+            const midGlow = `0 0 ${5 + powerRatio * 20}px rgba(${Math.round(255*powerRatio)},${Math.round(200*(1-powerRatio))},0,${0.2 + powerRatio*0.4})`;
+            midCone.style.boxShadow = midGlow;
+            const tweetGlow = `0 0 ${5 + powerRatio * 20}px rgba(0,${Math.round(170*(1-powerRatio))},255,${0.2 + powerRatio*0.4})`;
+            tweetDome.style.boxShadow = tweetGlow;
+
+            if (smoothBass > 100) {
+                const portGlow = `inset 0 0 ${smoothBass/5}px rgba(${r},${g},${b},0.3)`;
+                subPort.style.boxShadow = portGlow;
+            } else {
+                subPort.style.boxShadow = 'inset 0 0 15px rgba(0,0,0,0.8)';
+            }
+
+            if (curPower > watts * 0.6) {
+                const shake = (curPower / watts - 0.6) * 4;
+                $('tvScreen').parentElement.style.transform = `translate(${(Math.random()-0.5)*shake}px,${(Math.random()-0.5)*shake}px)`;
+            } else {
+                $('tvScreen').parentElement.style.transform = 'translate(0,0)';
+            }
+
+            drawSpectrum(freqData, bufLen);
+            drawWaveform(timeData, bufLen, isClip);
+        }
+
+        function drawSpectrum(data, len) {
+            const w = spectrumCanvas.width, h = spectrumCanvas.height;
+            spectrumCtx.fillStyle = '#0a0a0f';
+            spectrumCtx.fillRect(0, 0, w, h);
+
+            const barW = (w / len) * 2.5;
+            let x = 0;
+            for (let i = 0; i < len && x < w; i++) {
+                const barH = (data[i] / 255) * h;
+                const hue = 120 - (i / len) * 120;
+                spectrumCtx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+                spectrumCtx.fillRect(x, h - barH, barW - 1, barH);
+                x += barW;
+            }
+        }
+
+        function drawWaveform(data, len, clip) {
+            const w = waveformCanvas.width, h = waveformCanvas.height;
+            waveformCtx.fillStyle = '#0a0a0f';
+            waveformCtx.fillRect(0, 0, w, h);
+
+            waveformCtx.lineWidth = 2;
+            waveformCtx.strokeStyle = clip ? 'var(--neon-red)' : 'var(--neon-green)';
+            waveformCtx.beginPath();
+
+            const sliceW = w / len;
+            let x = 0;
+            for (let i = 0; i < len; i++) {
+                const v = data[i] / 128;
+                const y = v * (h / 2);
+                if (i === 0) waveformCtx.moveTo(x, y);
+                else waveformCtx.lineTo(x, y);
+                x += sliceW;
+            }
+            waveformCtx.stroke();
+
+            if (clip) {
+                waveformCtx.strokeStyle = 'rgba(255,0,68,0.2)';
+                waveformCtx.lineWidth = 1;
+                waveformCtx.beginPath();
+                waveformCtx.moveTo(0, h * 0.08);
+                waveformCtx.lineTo(w, h * 0.08);
+                waveformCtx.moveTo(0, h * 0.92);
+                waveformCtx.lineTo(w, h * 0.92);
+                waveformCtx.stroke();
+            }
+        }
+
+        console.log('BASS OS loaded. Upload MP3 or MP4 to start.');
     </script>
 </body>
 </html>
