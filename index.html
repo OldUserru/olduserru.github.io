@@ -50,19 +50,35 @@
         .subtitle {
             color: #888;
             font-size: 14px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .section-title {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            padding-left: 5px;
+            border-left: 3px solid #667eea;
         }
         
         .link {
             display: block;
             padding: 15px 20px;
-            margin: 10px 0;
+            margin: 8px 0;
             background: #f0f0f0;
             border-radius: 12px;
             text-decoration: none;
             color: #333;
             font-weight: 500;
             transition: all 0.3s ease;
+            text-align: center;
         }
         
         .link:hover {
@@ -75,13 +91,14 @@
         .windows-link {
             display: block;
             padding: 15px 20px;
-            margin: 10px 0;
+            margin: 8px 0;
             background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
             border-radius: 12px;
             text-decoration: none;
             color: white;
             font-weight: 600;
             transition: all 0.3s ease;
+            text-align: center;
         }
         
         .windows-link:hover {
@@ -89,42 +106,18 @@
             box-shadow: 0 5px 20px rgba(0, 120, 212, 0.5);
         }
         
-        .peak-link {
-            display: block;
-            padding: 15px 20px;
-            margin: 10px 0;
-            background: linear-gradient(135deg, #2d3436 0%, #000000 100%);
+        .empty-section {
+            padding: 20px;
+            background: #f8f8f8;
             border-radius: 12px;
-            text-decoration: none;
-            color: #00d2d3;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .peak-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 210, 211, 0.4);
-        }
-        
-        .sub-link {
-            display: block;
-            padding: 15px 20px;
-            margin: 10px 0;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 12px;
-            text-decoration: none;
-            color: #ff6b6b;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .sub-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+            color: #aaa;
+            font-size: 13px;
+            text-align: center;
+            border: 2px dashed #ddd;
         }
         
         .note {
-            margin-top: 20px;
+            margin-top: 25px;
             color: #888;
             font-size: 12px;
             line-height: 1.5;
@@ -143,10 +136,24 @@
         <h1>Aqvich</h1>
         <div class="subtitle">Сайт переходник</div>
         
-        <a href="bassplayer.html" class="link">Bass Player</a>
-        <a href="windowsdownloader.html" class="windows-link">Windows 11 ISO</a>
-        <a href="https://forms.gle/CN3THF1RBJMLkR9b8" class="peak-link">Предложка</a>
-        <a href="subwoofer_simulator.html" class="sub-link">Sub simulator</a>
+        <!-- Раздел 1: Музыка -->
+        <div class="section">
+            <div class="section-title">Музыка</div>
+            <a href="bassplayer.html" class="link">Bass Player</a>
+            <a href="subwoofer_simulator.html" class="link">Sub simulator</a>
+        </div>
+        
+        <!-- Раздел 2: Компьютеры -->
+        <div class="section">
+            <div class="section-title">Компьютеры</div>
+            <a href="windowsdownloader.html" class="windows-link">Windows 11 ISO</a>
+        </div>
+        
+        <!-- Раздел 3: Игры -->
+        <div class="section">
+            <div class="section-title">Игры</div>
+            <div class="empty-section">Пока пусто...</div>
+        </div>
         
         <div class="note">Подходит для Ростелекома, МТС, Билайн, Дом.ру и других провайдеров</div>
         
