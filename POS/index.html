@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="pos-container">
+        <!-- Screen -1: Auth -->
+        <div id="screen-auth" class="screen active">
+            <div class="header">
+                <div class="qiwi-logo" style="margin-bottom: 20px;">Qiwi.tech</div>
+                <h1 style="font-size: 20px;">Вход в систему</h1>
+            </div>
+            <div class="processing-content" style="justify-content: flex-start; padding-top: 30px;">
+                <!-- Секция Входа -->
+                <div id="auth-login-section" style="width: 100%;">
+                    <input type="email" id="auth-email" placeholder="Email" style="width: 100%; padding: 15px; margin-bottom: 15px; background: #2c2e33; border: 2px solid #343a40; border-radius: 10px; color: white; font-size: 16px;">
+                    <input type="password" id="auth-password" placeholder="Пароль" style="width: 100%; padding: 15px; margin-bottom: 20px; background: #2c2e33; border: 2px solid #343a40; border-radius: 10px; color: white; font-size: 16px;">
+                    <button id="btn-login" class="pay-btn" style="width: 100%; margin-bottom: 10px;">Войти</button>
+                    <button id="btn-google-login" class="pay-btn" style="width: 100%; margin-bottom: 10px; background-color: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style="width: 20px; height: 20px;">
+                        Войти через Google
+                    </button>
+                    <button id="btn-show-register" class="pay-btn" style="width: 100%; background-color: #343a40; color: #868e96;">Создать аккаунт</button>
+                </div>
+
+                <!-- Секция Регистрации -->
+                <div id="auth-register-section" style="width: 100%; display: none;">
+                    <input type="text" id="reg-name" placeholder="Имя" style="width: 100%; padding: 15px; margin-bottom: 15px; background: #2c2e33; border: 2px solid #343a40; border-radius: 10px; color: white; font-size: 16px;">
+                    <input type="date" id="reg-dob" placeholder="Дата рождения" style="width: 100%; padding: 15px; margin-bottom: 15px; background: #2c2e33; border: 2px solid #343a40; border-radius: 10px; color: white; font-size: 16px;">
+                    <input type="email" id="reg-email" placeholder="Email" style="width: 100%; padding: 15px; margin-bottom: 15px; background: #2c2e33; border: 2px solid #343a40; border-radius: 10px; color: white; font-size: 16px;">
+                    <input type="password" id="reg-password" placeholder="Пароль" style="width: 100%; padding: 15px; margin-bottom: 20px; background: #2c2e33; border: 2px solid #343a40; border-radius: 10px; color: white; font-size: 16px;">
+                    <button id="btn-register-submit" class="pay-btn" style="width: 100%; background-color: #51cf66; margin-bottom: 10px;">Зарегистрироваться</button>
+                    <button id="btn-show-login" class="pay-btn" style="width: 100%; background-color: #343a40; color: #868e96;">Назад ко входу</button>
+                </div>
+
+                <div id="auth-error" style="color: #ff6b6b; margin-top: 15px; text-align: center; font-size: 14px;"></div>
+            </div>
+        </div>
+
+        <!-- Screen 0: Role Selection -->
+        <div id="screen-role" class="screen">
+            <div class="header">
+                <h1>Выберите режим</h1>
+            </div>
+            <div class="role-menu">
+                <button class="role-btn" onclick="selectRole('cashier')">
+                    <i class="fas fa-calculator"></i>
+                    Касса
+                </button>
+                <button class="role-btn" onclick="selectRole('customer')">
+                    <i class="fas fa-mobile-alt"></i>
+                    Экран
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 0.5: PIN Entry (Cashier) -->
+        <div id="screen-pin" class="screen">
+            <div class="header" style="position: relative;">
+                <button class="back-btn" onclick="goBackToMenu()"><i class="fas fa-arrow-left"></i></button>
+                <h1>Авторизация</h1>
+            </div>
+            <div class="processing-content" style="flex-grow: 0; margin-top: 40px; margin-bottom: 40px;">
+                <h3 style="color: var(--text-color);">Введите ПИН-код</h3>
+                <div class="pin-display" id="pin-display">
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                </div>
+            </div>
+            <div class="keypad">
+                <button class="key" onclick="appendPin('1')">1</button>
+                <button class="key" onclick="appendPin('2')">2</button>
+                <button class="key" onclick="appendPin('3')">3</button>
+                <button class="key" onclick="appendPin('4')">4</button>
+                <button class="key" onclick="appendPin('5')">5</button>
+                <button class="key" onclick="appendPin('6')">6</button>
+                <button class="key" onclick="appendPin('7')">7</button>
+                <button class="key" onclick="appendPin('8')">8</button>
+                <button class="key" onclick="appendPin('9')">9</button>
+                <button class="key action delete" onclick="deletePin()"><i class="fas fa-backspace"></i></button>
+                <button class="key" onclick="appendPin('0')">0</button>
+                <button class="key action delete" style="visibility: hidden;"></button>
+            </div>
+        </div>
+
+        <!-- Screen 1: Enter Amount (Cashier) -->
+        <div id="screen-amount" class="screen">
+            <div class="header" style="position: relative;">
+                <button class="back-btn" onclick="goBackToMenu()"><i class="fas fa-arrow-left"></i></button>
+                <h1>Касса</h1>
+                <div class="balance-display">Баланс: <span id="cashier-balance">0.00</span> ₽</div>
+            </div>
+            <div class="display">
+                <span class="currency">₽</span>
+                <span id="amount-display">0</span>
+            </div>
+
+            <div class="keypad">
+                <button class="key" onclick="appendNumber('1')">1</button>
+                <button class="key" onclick="appendNumber('2')">2</button>
+                <button class="key" onclick="appendNumber('3')">3</button>
+                <button class="key" onclick="appendNumber('4')">4</button>
+                <button class="key" onclick="appendNumber('5')">5</button>
+                <button class="key" onclick="appendNumber('6')">6</button>
+                <button class="key" onclick="appendNumber('7')">7</button>
+                <button class="key" onclick="appendNumber('8')">8</button>
+                <button class="key" onclick="appendNumber('9')">9</button>
+                <button class="key" onclick="appendNumber('00')">00</button>
+                <button class="key" onclick="appendNumber('0')">0</button>
+                <button class="key action delete" onclick="deleteNumber()"><i class="fas fa-backspace"></i></button>
+            </div>
+            <button class="pay-btn" onclick="startPayment()">Выставить счет</button>
+        </div>
+
+        <!-- Screen 1.5: Waiting for payment (Cashier) -->
+        <div id="screen-waiting" class="screen">
+            <div class="header">
+                <h1>Ожидание оплаты</h1>
+            </div>
+            <div class="processing-content">
+                <div class="spinner"></div>
+                <h3 style="margin-top: 20px;">Клиент оплачивает...</h3>
+            </div>
+            <button class="cancel-btn" onclick="cancelPayment()">Отмена</button>
+        </div>
+
+        <!-- Screen 2: Tap Card / QR (Customer) -->
+        <div id="screen-tap" class="screen">
+            <div class="header" style="position: relative;">
+                <button class="back-btn" onclick="goBackToMenu()"><i class="fas fa-arrow-left"></i></button>
+                <div class="qiwi-logo">Qiwi.tech</div>
+            </div>
+            <div class="tap-content" id="tap-content-inner" onclick="simulateNfcTap()">
+                <h2 style="font-size: 20px; color: #868e96;">К оплате: <br><span id="payment-amount" style="font-size: 42px; margin-top: 10px; display: inline-block; color: white;">0</span> ₽</h2>
+                <div class="qr-container">
+                    <!-- Заглушка QR кода -->
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=QiwiPaySimulator&bgcolor=ffffff&color=000000" alt="QR Code">
+                </div>
+                <div class="nfc-animation" style="font-size: 40px; margin-top: 30px; margin-bottom: 20px;">
+                    <i class="fas fa-wifi fa-rotate-90"></i>
+                </div>
+                <p>Отсканируйте QR или<br>приложите карту</p>
+            </div>
+        </div>
+
+        <!-- Screen 2.5: Idle (Customer) -->
+        <div id="screen-idle" class="screen">
+            <div class="header" style="position: relative;">
+                <button class="back-btn" onclick="goBackToMenu()"><i class="fas fa-arrow-left"></i></button>
+                <div class="qiwi-logo">Qiwi.tech</div>
+            </div>
+            <div class="processing-content">
+                <i class="fas fa-shopping-basket" style="font-size: 50px; color: #343a40; margin-bottom: 20px;"></i>
+                <h3 style="color: #868e96;">Ожидание кассы...</h3>
+            </div>
+        </div>
+
+        <!-- Screen 3: Processing (Both) -->
+        <div id="screen-processing" class="screen">
+            <div class="qiwi-logo" style="text-align: center; margin-bottom: 20px; margin-top: 20px;">Qiwi.tech</div>
+            <div class="processing-content">
+                <div class="spinner"></div>
+                <h3>Обработка...</h3>
+            </div>
+        </div>
+
+        <!-- Screen 4: Success (Both) -->
+        <div id="screen-success" class="screen">
+            <div class="qiwi-logo" style="text-align: center; margin-bottom: 20px; margin-top: 20px;">Qiwi.tech</div>
+            <div class="success-content">
+                <div class="check-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Успешно</h3>
+                <p>Оплата прошла</p>
+                <div id="receipt-container" style="display: none;">
+                    <div class="receipt">
+                        <h4>Qiwi.tech</h4>
+                        <p style="font-size: 12px; margin-bottom: 5px;">Чек об оплате</p>
+                        <hr style="border: 1px dashed #ccc; margin-bottom: 5px;">
+                        <p style="font-weight: bold; font-size: 16px;">Сумма: <span id="receipt-amount">0</span> ₽</p>
+                        <p style="font-size: 10px; color: #868e96; margin-top: 5px;">Спасибо за покупку!</p>
+                    </div>
+                </div>
+            </div>
+            <button class="done-btn" onclick="resetTerminal()">Готово</button>
+        </div>
+
+        <!-- Screen 5: Error (Both) -->
+        <div id="screen-error" class="screen">
+            <div class="qiwi-logo" style="text-align: center; margin-bottom: 20px; margin-top: 20px;">Qiwi.tech</div>
+            <div class="success-content error-content">
+                <div class="error-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <h3>Отклонено</h3>
+                <p>Ошибка авторизации</p>
+            </div>
+            <button class="cancel-btn" style="margin-top: auto;" onclick="resetTerminal()">На главную</button>
+        </div>
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
