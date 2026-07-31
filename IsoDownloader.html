@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог образов Windows</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #050505 80%);
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --card-border-hover: rgba(255, 255, 255, 0.15);
+            --primary: #00f2fe;
+            --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent: #7b2cbf;
+            --accent-gradient: linear-gradient(135deg, #7b2cbf 0%, #b5179e 100%);
+            --text-main: #f0f0f0;
+            --text-muted: #8892b0;
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --success: #00ff87;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background animated blobs */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.1;
+            z-index: -1;
+            animation: float 20s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        body::before {
+            top: -100px;
+            left: -200px;
+            background: var(--primary);
+        }
+
+        body::after {
+            bottom: -200px;
+            right: -100px;
+            background: var(--accent);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.2); }
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #8892b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+        }
+
+        .card-title .icon {
+            font-size: 1.6rem;
+            background: rgba(255,255,255,0.05);
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        /* Downloads */
+        .download-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px 25px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .download-item:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(123, 44, 191, 0.4);
+            transform: translateX(8px);
+            box-shadow: -5px 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .download-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .download-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+
+        .download-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .download-details h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        
+        .download-badges {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .download-details span.desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        
+        .download-details .badge-new {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(79, 172, 254, 0.1));
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .key-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--primary);
+            background: rgba(0, 242, 254, 0.05);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 242, 254, 0.15);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .key-box:hover {
+            background: rgba(0, 242, 254, 0.15);
+            color: #fff;
+            border-color: rgba(0, 242, 254, 0.4);
+        }
+        
+        .key-box.copied {
+            background: var(--success);
+            color: #000;
+            border-color: var(--success);
+            font-weight: 700;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: var(--font-main);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(123, 44, 191, 0.3);
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-20deg);
+            transition: all 0.5s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(123, 44, 191, 0.5);
+            color: #fff;
+        }
+        
+        .download-btn:hover::before {
+            left: 150%;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px rgba(0,255,135,0.1);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.2rem; }
+            .download-item { flex-direction: column; gap: 20px; text-align: center; }
+            .download-info { flex-direction: column; }
+            .download-details { align-items: center; }
+            .card { padding: 25px; }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Selection */
+        ::selection {
+            background: rgba(0, 242, 254, 0.3);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🪟 Каталог образов Windows</h1>
+            <p>Прямые ссылки для скачивания оригинальных образов ОС и ключи установки</p>
+        </div>
+
+        <!-- Windows 11 -->
+        <div class="card">
+            <div class="card-title">
+                <span class="icon">✨</span>
+                <span>Windows 11</span>
+            </div>
+
+            <div class="download-list">
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🪟</span>
+                        <div class="download-details">
+                            <h3>Windows 11 Pro 26H1</h3>
+                            <div class="download-badges">
+                                <span class="badge-new">✨ Новинка</span>
+                                <span class="desc">Самая новая версия</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'W269N-WFGWX-YVC9B-4J6C9-T83GX')">
+                                <span>🔑</span> W269N-WFGWX-YVC9B-4J6C9-T83GX
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://keysoft.software/Windows_11/ru-ru_windows_11_consumer_editions_version_26h1_updated_april_2026_x64_dvd_69ae07e3.iso" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🪟</span>
+                        <div class="download-details">
+                            <h3>Windows 11 Pro 25H2</h3>
+                            <div class="download-badges">
+                                <span class="desc">Актуальная версия</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'W269N-WFGWX-YVC9B-4J6C9-T83GX')">
+                                <span>🔑</span> W269N-WFGWX-YVC9B-4J6C9-T83GX
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://softnet.su/download/microsoft-windows/windows-11/windows-11-pro/get-download-ac54dde228f64fccff38035001b036b7" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🪟</span>
+                        <div class="download-details">
+                            <h3>Windows 11 Pro 24H2</h3>
+                            <div class="download-badges">
+                                <span class="desc">Стабильная версия</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'W269N-WFGWX-YVC9B-4J6C9-T83GX')">
+                                <span>🔑</span> W269N-WFGWX-YVC9B-4J6C9-T83GX
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://softnet.su/download/microsoft-windows/windows-11/windows-11-pro/get-download-59107120b5c4b62b07aa92de6767b90a" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🪟</span>
+                        <div class="download-details">
+                            <h3>Windows 11 Pro 23H2</h3>
+                            <div class="download-badges">
+                                <span class="desc">Проверенная версия</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'W269N-WFGWX-YVC9B-4J6C9-T83GX')">
+                                <span>🔑</span> W269N-WFGWX-YVC9B-4J6C9-T83GX
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://keysoft.software/Windows_11/Win11_23H2_Russian_x64.iso" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🪟</span>
+                        <div class="download-details">
+                            <h3>Windows 11 Pro 22H2</h3>
+                            <div class="download-badges">
+                                <span class="desc">Старая версия</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'W269N-WFGWX-YVC9B-4J6C9-T83GX')">
+                                <span>🔑</span> W269N-WFGWX-YVC9B-4J6C9-T83GX
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://softnet.su/download/microsoft-windows/windows-11/windows-11-pro/get-download-cc5366c8426b4a35b451281c9e168d95" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Windows 10 & 8.1 -->
+        <div class="card">
+            <div class="card-title">
+                <span class="icon">💻</span>
+                <span>Классические ОС</span>
+            </div>
+
+            <div class="download-list">
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🪟</span>
+                        <div class="download-details">
+                            <h3>Windows 10 22H2 Pro</h3>
+                            <div class="download-badges">
+                                <span class="desc">Последняя версия Windows 10</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'W269N-WFGWX-YVC9B-4J6C9-T83GX')">
+                                <span>🔑</span> W269N-WFGWX-YVC9B-4J6C9-T83GX
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://keysoft.software/Windows%2010/Win10_22H2_Russian_x64.iso" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🪟</span>
+                        <div class="download-details">
+                            <h3>Windows 8.1 Pro</h3>
+                            <div class="download-badges">
+                                <span class="desc">Классическая версия</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'GCRJD-8NW9H-F2CDX-CCM8D-9D6T9')">
+                                <span>🔑</span> GCRJD-8NW9H-F2CDX-CCM8D-9D6T9
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://keysoft.software/Windows%208.1/Win8.1_Russian_x64.iso" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Windows Server -->
+        <div class="card">
+            <div class="card-title">
+                <span class="icon">🖥️</span>
+                <span>Windows Server</span>
+            </div>
+
+            <div class="download-list">
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🗄️</span>
+                        <div class="download-details">
+                            <h3>Windows Server 2025 Standard</h3>
+                            <div class="download-badges">
+                                <span class="badge-new">✨ Новинка</span>
+                                <span class="desc">Последняя серверная ОС</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'TVRH6-WHNXV-R9WG3-9XRFY-MY832')">
+                                <span>🔑</span> TVRH6-WHNXV-R9WG3-9XRFY-MY832
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://keysoft.software/Windows%20Server/2025/ru-ru_windows_server_2025_x64_dvd_5ada1817.iso" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🗄️</span>
+                        <div class="download-details">
+                            <h3>Windows Server 2022 Standard</h3>
+                            <div class="download-badges">
+                                <span class="desc">Современное решение</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'VDYBN-27WPP-V4HQT-DXY82-VMQG7')">
+                                <span>🔑</span> VDYBN-27WPP-V4HQT-DXY82-VMQG7
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://keysoft.software/Windows%20Server/2022/ru-ru_windows_server_2022_x64_dvd_d8fd3d54.iso" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🗄️</span>
+                        <div class="download-details">
+                            <h3>Windows Server 2019 Standard</h3>
+                            <div class="download-badges">
+                                <span class="desc">Стабильная версия</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'N69G4-B83DG-MTYMR-89K96-M499R')">
+                                <span>🔑</span> N69G4-B83DG-MTYMR-89K96-M499R
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://keysoft.software/Windows%20Server/ru_windows_server_2019_updated_jan_2021_x64_dvd_0bc62814.iso" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🗄️</span>
+                        <div class="download-details">
+                            <h3>Windows Server 2016 Standard</h3>
+                            <div class="download-badges">
+                                <span class="desc">Классический сервер</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'WC2BQ-8NRM3-FDDYY-2BFGV-KCHQY')">
+                                <span>🔑</span> WC2BQ-8NRM3-FDDYY-2BFGV-KCHQY
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://keysoft.software/Windows%20Server/ru_windows_server_2016_x64_dvd_9327766.iso" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+
+                <div class="download-item">
+                    <div class="download-info">
+                        <span class="download-icon">🗄️</span>
+                        <div class="download-details">
+                            <h3>Windows Server 2012 Standard</h3>
+                            <div class="download-badges">
+                                <span class="desc">R2 with Update</span>
+                            </div>
+                            <div class="key-box" onclick="copyText(event, 'XC9B7-WNB7Q-6C9HH-CWDWH-K2H6R')">
+                                <span>🔑</span> XC9B7-WNB7Q-6C9HH-CWDWH-K2H6R
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://keysoft.software/Windows%20Server/ru_windows_server_2012_r2_with_update_x64_dvd_6052763.iso" class="download-btn" target="_blank">
+                        <span>⬇️</span> Скачать
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Ссылки взяты из открытых источников</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><span>✅</span> <span id="toastMsg">Скопировано!</span></div>
+
+    <script>
+        // Copy Text
+        function copyText(event, text) {
+            event.preventDefault();
+            event.stopPropagation();
+            navigator.clipboard.writeText(text).then(() => {
+                const box = event.currentTarget;
+                const originalContent = box.innerHTML;
+                box.classList.add('copied');
+                box.innerHTML = '<span>✅</span> Скопировано';
+                showToast('Ключ скопирован: ' + text);
+                setTimeout(() => {
+                    box.classList.remove('copied');
+                    box.innerHTML = originalContent;
+                }, 1500);
+            });
+        }
+
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>
