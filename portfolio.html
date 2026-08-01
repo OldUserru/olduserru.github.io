@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qiwi.tech - Portfolio</title>
+    <meta name="description" content="Personal Portfolio of Qiwi.tech - Developer and Creator">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #050810;
+            --surface-color: rgba(255, 255, 255, 0.03);
+            --surface-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-1: #3b82f6; /* Blue */
+            --accent-2: #8b5cf6; /* Purple */
+            --accent-3: #10b981; /* Emerald */
+            --gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            --gradient-hover: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-1);
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            line-height: 1.2;
+        }
+        .text-gradient {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        .section-title span {
+            color: var(--accent-1);
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--surface-border);
+            background: rgba(5, 8, 16, 0.7);
+            transition: all 0.3s ease;
+        }
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 1.1rem;
+        }
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 5rem;
+            text-align: center;
+        }
+        .hero-content {
+            z-index: 2;
+            max-width: 800px;
+        }
+        .avatar-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 2rem;
+        }
+        .avatar-glow {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: var(--gradient);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(25px);
+            opacity: 0.7;
+            animation: pulse 3s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: scale(0.9); }
+            100% { opacity: 0.8; transform: scale(1.1); }
+        }
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-color);
+            background: #1e293b;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        .hero h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-inline: auto;
+        }
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(59, 130, 246, 0.4);
+            background: var(--gradient-hover);
+        }
+        .btn-secondary {
+            background: var(--surface-color);
+            color: var(--text-primary);
+            border: 1px solid var(--surface-border);
+            margin-left: 1rem;
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-3px);
+        }
+
+        /* About Section */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        .about-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .stat-item {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-1);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+        .skill-card {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            padding: 2rem 1rem;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .skill-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-1);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+        }
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-2);
+        }
+        .skill-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .project-card {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            display: block;
+            position: relative;
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+        .project-img-wrapper {
+            height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card:hover .project-img-wrapper i {
+            color: var(--accent-1);
+            transform: scale(1.1);
+            transition: all 0.3s ease;
+        }
+        .project-content {
+            padding: 2rem;
+        }
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .project-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .tag {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            padding: 4rem 2rem;
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--surface-border);
+        }
+        .social-link:hover {
+            background: var(--gradient);
+            transform: translateY(-5px);
+            border-color: transparent;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--surface-border);
+            margin-top: 4rem;
+            color: var(--text-secondary);
+        }
+
+        /* Particles bg */
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .about-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .btn-secondary { margin-left: 0; margin-top: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <a href="#" class="logo">Qiwi<span class="text-gradient">.tech</span></a>
+            <ul class="nav-links">
+                <li><a href="#about">Обо мне</a></li>
+                <li><a href="#skills">Навыки</a></li>
+                <li><a href="#projects">Проекты</a></li>
+                <li><a href="#blog">Блог</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div id="particles-js"></div>
+        <div class="container hero-content">
+            <div class="avatar-container">
+                <div class="avatar-glow"></div>
+                <!-- Fallback icon if image doesn't load -->
+                <img src="preview.jpg" alt="Qiwi.tech" class="avatar" onerror="this.src='https://ui-avatars.com/api/?name=Qiwi+Tech&background=1e293b&color=3b82f6&size=200'">
+            </div>
+            <h1>Привет, я <span class="text-gradient">Арман Димаксян</span></h1>
+            <h2>Никнейм: Qiwi.tech | Возраст: 13 лет</h2>
+            <p>Привет! Я кодер. Мне нравится делать всякие сайты и собирать что-то на ардуино. Вступай в Qiwi™</p>
+            <div>
+                <a href="#projects" class="btn btn-primary">Мои работы</a>
+                <a href="#contact" class="btn btn-secondary">Связаться со мной</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">Обо <span>Мне</span></h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Создаю цифровой опыт</h3>
+                    <p>Меня зовут Арман, мне 13 лет. Привет! Я кодер. Мне нравится делать всякие сайты и собирать что-то на ардуино.</p>
+                    <p>Я постоянно развиваюсь, изучаю новые технологии и создаю интересные проекты. Вступай в Qiwi™!</p>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-number">6+</div>
+                            <div class="stat-label">Готовых проектов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Энтузиазм</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image" style="position: relative;">
+                    <!-- Decorative element instead of an image -->
+                    <div style="background: var(--surface-color); border: 1px solid var(--surface-border); border-radius: 20px; padding: 2rem; position: relative; overflow: hidden; height: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center;">
+                        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: var(--accent-2); filter: blur(80px); opacity: 0.3; border-radius: 50%;"></div>
+                        <div style="position: absolute; bottom: -50px; left: -50px; width: 200px; height: 200px; background: var(--accent-1); filter: blur(80px); opacity: 0.3; border-radius: 50%;"></div>
+                        <i class="fa-solid fa-code" style="font-size: 5rem; color: var(--text-secondary); opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title">Мои <span>Навыки</span></h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <i class="fa-brands fa-html5 skill-icon"></i>
+                    <div class="skill-name">HTML</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-brands fa-css3-alt skill-icon"></i>
+                    <div class="skill-name">CSS</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-brands fa-js skill-icon"></i>
+                    <div class="skill-name">JavaScript</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-brands fa-node-js skill-icon"></i>
+                    <div class="skill-name">Node.js</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-brands fa-cuttlefish skill-icon"></i>
+                    <div class="skill-name">C++</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-solid fa-microchip skill-icon"></i>
+                    <div class="skill-name">Arduino</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title">Мои <span>Проекты</span></h2>
+            <div class="projects-grid">
+                
+                <!-- Project 1 -->
+                <a href="BassPlayer.html" class="project-card">
+                    <div class="project-img-wrapper">
+                        <i class="fa-solid fa-music"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Bass Player</h3>
+                        <p class="project-desc">Аудио плеер с мощным BASS BOOST и встроенным эквалайзером для идеального звучания.</p>
+                        <div class="project-tags">
+                            <span class="tag">Аудио</span>
+                            <span class="tag">JavaScript</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Project 2 -->
+                <a href="IsoDownloader.html" class="project-card">
+                    <div class="project-img-wrapper">
+                        <i class="fa-solid fa-download"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">WindowLoader</h3>
+                        <p class="project-desc">Удобный сервис, на котором можно легко и быстро скачать различные версии ОС Windows.</p>
+                        <div class="project-tags">
+                            <span class="tag">Загрузчик</span>
+                            <span class="tag">Интерфейс</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Project 3 -->
+                <a href="bass_os.html" class="project-card">
+                    <div class="project-img-wrapper">
+                        <i class="fa-solid fa-compact-disc"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Sub Simulator</h3>
+                        <p class="project-desc">Продвинутый визуализатор сабвуфера, создающий реалистичный эффект клиппинга.</p>
+                        <div class="project-tags">
+                            <span class="tag">Симулятор</span>
+                            <span class="tag">WebAudio</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Project 4 -->
+                <a href="/POS/index.html" class="project-card">
+                    <div class="project-img-wrapper">
+                        <i class="fa-solid fa-cash-register"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">POS System</h3>
+                        <p class="project-desc">Симулятор кассы (безопасный фейк: не позволяет выводить деньги и не реагирует на настоящие карты).</p>
+                        <div class="project-tags">
+                            <span class="tag">Симулятор</span>
+                            <span class="tag">Бизнес</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Project 5 -->
+                <a href="/ArduinoAI/ArduinoAI.html" class="project-card">
+                    <div class="project-img-wrapper">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">ArduinoAI</h3>
+                        <p class="project-desc">Абсолютно бесплатная нейросеть. Внутри работает продвинутая модель Gemini 3.6 Medium.</p>
+                        <div class="project-tags">
+                            <span class="tag">Нейросеть</span>
+                            <span class="tag">ИИ</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Project 6 -->
+                <a href="DriverHub/index.html" class="project-card">
+                    <div class="project-img-wrapper">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">DriverHUB</h3>
+                        <p class="project-desc">Полезный сайт-каталог, который позволяет легко находить и скачивать нужные драйвера для системы.</p>
+                        <div class="project-tags">
+                            <span class="tag">Система</span>
+                            <span class="tag">Утилиты</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog / Widget Section -->
+    <section id="blog">
+        <div class="container">
+            <h2 class="section-title">Мои <span>Новости (Teletype)</span></h2>
+            
+            <div id="teletype-widget" class="blog-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+                <!-- Сюда будут загружаться посты -->
+                <p style="color: var(--text-secondary); text-align: center; width: 100%; grid-column: 1 / -1;">Загрузка свежих постов...</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="https://teletype.in/" id="teletype-main-link" target="_blank" class="btn btn-primary" style="padding: 1rem 2rem; display: inline-flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Читать всё в Teletype</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Скрипт виджета Teletype -->
+    <script>
+        // Имя вашего профиля в Teletype (БЕЗ символа @)
+        // Например: если ссылка https://teletype.in/@qiwi.tech, то пишем просто 'qiwi.tech'
+        const teletypeUsername = 'qiwi.tech'; // <-- ПОМЕНЯЙТЕ НА СВОЙ НИК!
+
+        document.getElementById('teletype-main-link').href = 'https://teletype.in/@' + teletypeUsername;
+
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://teletype.in/rss/@${teletypeUsername}`)
+            .then(response => response.json())
+            .then(data => {
+                const widget = document.getElementById('teletype-widget');
+                widget.innerHTML = ''; 
+                
+                if (data.status === 'ok' && data.items.length > 0) {
+                    // Берем последние 3 поста
+                    const posts = data.items.slice(0, 3);
+                    posts.forEach(post => {
+                        let cleanText = post.description.replace(/<[^>]*>?/gm, '').substring(0, 110) + '...';
+                        let date = new Date(post.pubDate).toLocaleDateString('ru-RU');
+                        
+                        let card = `
+                        <a href="${post.link}" target="_blank" style="text-decoration: none; color: inherit;">
+                            <div style="background: var(--surface-color); border: 1px solid var(--surface-border); border-radius: 15px; padding: 1.5rem; height: 100%; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; backdrop-filter: blur(10px);" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='rgba(59, 130, 246, 0.4)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--surface-border)'; this.style.boxShadow='none'">
+                                <span style="color: var(--accent-1); font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.5rem;">${date}</span>
+                                <h3 style="margin: 0 0 1rem 0; font-size: 1.3rem; line-height: 1.3;">${post.title}</h3>
+                                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin: 0;">${cleanText}</p>
+                            </div>
+                        </a>
+                        `;
+                        widget.innerHTML += card;
+                    });
+                } else {
+                    widget.innerHTML = '<p style="color: var(--text-secondary); text-align: center; width: 100%; grid-column: 1 / -1;">Пока нет новостей или неверный ник.</p>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('teletype-widget').innerHTML = '<p style="color: var(--text-secondary); text-align: center; width: 100%; grid-column: 1 / -1;">Не удалось загрузить новости.</p>';
+            });
+    </script>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <h2 class="section-title" style="margin-bottom: 1rem;">Связь <span>Со мной</span></h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">Хотите обсудить проект или есть вопросы? Напишите мне, буду рад пообщаться.</p>
+                <a href="mailto:metaquestvropen@gmail.com" class="btn btn-primary" style="padding: 1rem 3rem;">Написать мне</a>
+                
+                <div class="social-links">
+                    <a href="https://github.com/olduserru" target="_blank" class="social-link"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://t.me/qiwitechno" target="_blank" class="social-link"><i class="fa-brands fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Qiwi.tech. Сделано с душой и креативом.</p>
+        </div>
+    </footer>
+
+    <!-- Particles.js library -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Particles initialization
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS("particles-js", {
+                    "particles": {
+                        "number": { "value": 40, "density": { "enable": true, "value_area": 1000 } },
+                        "color": { "value": ["#3b82f6", "#8b5cf6", "#10b981"] },
+                        "shape": { "type": "circle" },
+                        "opacity": { 
+                            "value": 0.5, 
+                            "random": true, 
+                            "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } 
+                        },
+                        "size": { 
+                            "value": 3, 
+                            "random": true, 
+                            "anim": { "enable": true, "speed": 2, "size_min": 0.1, "sync": false } 
+                        },
+                        "line_linked": { "enable": false },
+                        "move": { 
+                            "enable": true, 
+                            "speed": 0.5, 
+                            "direction": "top", 
+                            "random": true, 
+                            "straight": false, 
+                            "out_mode": "out", 
+                            "bounce": false 
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": { "enable": true, "mode": "bubble" },
+                            "onclick": { "enable": true, "mode": "repulse" },
+                            "resize": true
+                        },
+                        "modes": {
+                            "bubble": { "distance": 250, "size": 6, "duration": 2, "opacity": 1, "speed": 3 },
+                            "repulse": { "distance": 400, "duration": 0.4 }
+                        }
+                    },
+                    "retina_detect": true
+                });
+            }
+        });
+    </script>
+</body>
+</html>
